@@ -3,6 +3,7 @@ namespace ShoppingList.List.UseCases.ShareLinks;
 public record UpdateShareLinkCommand(
     Guid ListId,
     Guid ShareId,
+    Guid OwnerId,
     SharePermissionType PermissionType,
     DateTimeOffset? ExpiresAt,
     bool IsActive
@@ -16,7 +17,7 @@ public sealed class UpdateShareLinkHandler(IRepository<ShareLinkEntity> reposito
         CancellationToken cancellationToken
     )
     {
-        var spec = new ShareLinkByIdSpec(request.ListId, request.ShareId);
+        var spec = new ShareLinkByIdSpec(request.ListId, request.ShareId, request.OwnerId);
         var link = await repository.FirstOrDefaultAsync(spec, cancellationToken);
         if (link is null)
             return Result.NotFound();

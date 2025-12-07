@@ -11,7 +11,17 @@ public class UpdateShoppingList(IMediator mediator)
 
     public override async Task HandleAsync(UpdateShoppingListRequest req, CancellationToken ct)
     {
-        var updateResult = await mediator.Send(new UpdateShoppingListCommand(req.Id, req.Name), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var updateResult = await mediator.Send(
+            new UpdateShoppingListCommand(req.Id, ownerId.Value, req.Name),
+            ct
+        );
         if (updateResult.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
@@ -23,7 +33,7 @@ public class UpdateShoppingList(IMediator mediator)
             return;
         }
 
-        var getResult = await mediator.Send(new GetShoppingListQuery(req.Id), ct);
+        var getResult = await mediator.Send(new GetShoppingListQuery(req.Id, ownerId.Value), ct);
         if (!getResult.IsSuccess)
         {
             await SendNotFoundAsync(ct);

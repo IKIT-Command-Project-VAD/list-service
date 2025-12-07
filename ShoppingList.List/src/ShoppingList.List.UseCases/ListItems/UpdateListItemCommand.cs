@@ -2,6 +2,7 @@ namespace ShoppingList.List.UseCases.ListItems;
 
 public record UpdateListItemCommand(
     Guid ListId,
+    Guid OwnerId,
     Guid ItemId,
     string Name,
     decimal Quantity,
@@ -23,6 +24,9 @@ public sealed class UpdateListItemHandler(IRepository<ListItemEntity> itemRepo)
         var spec = new ListItemByIdSpec(request.ListId, request.ItemId);
         var item = await itemRepo.FirstOrDefaultAsync(spec, cancellationToken);
         if (item is null)
+            return Result.NotFound();
+
+        if (item.List?.OwnerId != request.OwnerId)
             return Result.NotFound();
 
         item.Update(

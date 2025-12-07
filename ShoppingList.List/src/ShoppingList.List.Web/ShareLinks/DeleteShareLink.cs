@@ -12,7 +12,17 @@ public class DeleteShareLink(IMediator mediator) : Endpoint<DeleteShareLinkReque
 
     public override async Task HandleAsync(DeleteShareLinkRequest req, CancellationToken ct)
     {
-        var result = await mediator.Send(new DeleteShareLinkCommand(req.ListId, req.ShareId), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(
+            new DeleteShareLinkCommand(req.ListId, req.ShareId, ownerId.Value),
+            ct
+        );
         if (result.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);

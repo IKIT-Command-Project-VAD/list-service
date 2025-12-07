@@ -1,6 +1,6 @@
 ﻿namespace ShoppingList.List.UseCases.ShoppingLists;
 
-public record GetShoppingListQuery(Guid Id) : IQuery<Result<ShoppingListEntity>>;
+public record GetShoppingListQuery(Guid Id, Guid OwnerId) : IQuery<Result<ShoppingListEntity>>;
 
 public sealed class GetShoppingListHandler(IReadRepository<ShoppingListEntity> repository)
     : IQueryHandler<GetShoppingListQuery, Result<ShoppingListEntity>>
@@ -10,7 +10,7 @@ public sealed class GetShoppingListHandler(IReadRepository<ShoppingListEntity> r
         CancellationToken cancellationToken
     )
     {
-        var spec = new ShoppingListByIdWithDetailsSpec(request.Id);
+        var spec = new ShoppingListByIdWithDetailsSpec(request.Id, request.OwnerId);
         var list = await repository.FirstOrDefaultAsync(spec, cancellationToken);
         return list is null ? Result.NotFound() : Result.Success(list);
     }

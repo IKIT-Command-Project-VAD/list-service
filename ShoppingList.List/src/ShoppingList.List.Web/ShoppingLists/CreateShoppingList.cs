@@ -11,8 +11,15 @@ public class CreateShoppingList(IMediator mediator)
 
     public override async Task HandleAsync(CreateShoppingListRequest req, CancellationToken ct)
     {
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
         var createResult = await mediator.Send(
-            new CreateShoppingListCommand(req.OwnerId, req.Name),
+            new CreateShoppingListCommand(ownerId.Value, req.Name),
             ct
         );
         if (createResult.Status == ResultStatus.Invalid)
@@ -21,7 +28,10 @@ public class CreateShoppingList(IMediator mediator)
             return;
         }
 
-        var getResult = await mediator.Send(new GetShoppingListQuery(createResult.Value), ct);
+        var getResult = await mediator.Send(
+            new GetShoppingListQuery(createResult.Value, ownerId.Value),
+            ct
+        );
         if (!getResult.IsSuccess)
         {
             await SendNotFoundAsync(ct);
@@ -34,6 +44,5 @@ public class CreateShoppingList(IMediator mediator)
 
 public record CreateShoppingListRequest
 {
-    public Guid OwnerId { get; init; }
     public string Name { get; init; } = string.Empty;
 }

@@ -1,6 +1,6 @@
 namespace ShoppingList.List.UseCases.ShoppingLists;
 
-public record UpdateShoppingListCommand(Guid Id, string Name) : ICommand<Result>;
+public record UpdateShoppingListCommand(Guid Id, Guid OwnerId, string Name) : ICommand<Result>;
 
 public sealed class UpdateShoppingListHandler(IRepository<ShoppingListEntity> repository)
     : ICommandHandler<UpdateShoppingListCommand, Result>
@@ -10,7 +10,8 @@ public sealed class UpdateShoppingListHandler(IRepository<ShoppingListEntity> re
         CancellationToken cancellationToken
     )
     {
-        var list = await repository.GetByIdAsync(request.Id, cancellationToken);
+        var spec = new ShoppingListByIdWithDetailsSpec(request.Id, request.OwnerId);
+        var list = await repository.FirstOrDefaultAsync(spec, cancellationToken);
         if (list is null)
             return Result.NotFound();
 

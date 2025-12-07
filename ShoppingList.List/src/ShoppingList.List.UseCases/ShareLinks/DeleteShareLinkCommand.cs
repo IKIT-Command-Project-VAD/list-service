@@ -1,6 +1,6 @@
 namespace ShoppingList.List.UseCases.ShareLinks;
 
-public record DeleteShareLinkCommand(Guid ListId, Guid ShareId) : ICommand<Result>;
+public record DeleteShareLinkCommand(Guid ListId, Guid ShareId, Guid OwnerId) : ICommand<Result>;
 
 public sealed class DeleteShareLinkHandler(IRepository<ShareLinkEntity> repository)
     : ICommandHandler<DeleteShareLinkCommand, Result>
@@ -10,7 +10,7 @@ public sealed class DeleteShareLinkHandler(IRepository<ShareLinkEntity> reposito
         CancellationToken cancellationToken
     )
     {
-        var spec = new ShareLinkByIdSpec(request.ListId, request.ShareId);
+        var spec = new ShareLinkByIdSpec(request.ListId, request.ShareId, request.OwnerId);
         var link = await repository.FirstOrDefaultAsync(spec, cancellationToken);
         if (link is null)
             return Result.NotFound();

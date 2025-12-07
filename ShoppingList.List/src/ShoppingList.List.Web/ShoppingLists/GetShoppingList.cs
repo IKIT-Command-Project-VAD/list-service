@@ -11,7 +11,14 @@ public class GetShoppingList(IMediator mediator)
 
     public override async Task HandleAsync(GetShoppingListRequest req, CancellationToken ct)
     {
-        var result = await mediator.Send(new GetShoppingListQuery(req.Id), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(new GetShoppingListQuery(req.Id, ownerId.Value), ct);
         if (!result.IsSuccess)
         {
             await SendNotFoundAsync(ct);

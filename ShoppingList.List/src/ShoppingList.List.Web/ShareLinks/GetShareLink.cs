@@ -14,7 +14,17 @@ public class GetShareLink(IMediator mediator)
 
     public override async Task HandleAsync(GetShareLinkRequest req, CancellationToken ct)
     {
-        var result = await mediator.Send(new GetShareLinkQuery(req.ListId, req.ShareId), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(
+            new GetShareLinkQuery(req.ListId, req.ShareId, ownerId.Value),
+            ct
+        );
         if (!result.IsSuccess)
         {
             await SendNotFoundAsync(ct);

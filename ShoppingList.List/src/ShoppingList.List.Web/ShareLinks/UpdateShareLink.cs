@@ -14,10 +14,18 @@ public class UpdateShareLink(IMediator mediator) : Endpoint<UpdateShareLinkReque
 
     public override async Task HandleAsync(UpdateShareLinkRequest req, CancellationToken ct)
     {
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
         var updateResult = await mediator.Send(
             new UpdateShareLinkCommand(
                 req.ListId,
                 req.ShareId,
+                ownerId.Value,
                 req.PermissionType,
                 req.ExpiresAt,
                 req.IsActive
@@ -31,7 +39,10 @@ public class UpdateShareLink(IMediator mediator) : Endpoint<UpdateShareLinkReque
             return;
         }
 
-        var getResult = await mediator.Send(new GetShareLinkQuery(req.ListId, req.ShareId), ct);
+        var getResult = await mediator.Send(
+            new GetShareLinkQuery(req.ListId, req.ShareId, ownerId.Value),
+            ct
+        );
         Response = getResult.Value.ToRecord();
     }
 }

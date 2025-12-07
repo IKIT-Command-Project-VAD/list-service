@@ -1,6 +1,6 @@
 ﻿namespace ShoppingList.List.UseCases.ShoppingLists;
 
-public record ListShoppingListsQuery() : IQuery<Result<List<ShoppingListEntity>>>;
+public record ListShoppingListsQuery(Guid OwnerId) : IQuery<Result<List<ShoppingListEntity>>>;
 
 public sealed class ListShoppingListsHandler(IReadRepository<ShoppingListEntity> repository)
     : IQueryHandler<ListShoppingListsQuery, Result<List<ShoppingListEntity>>>
@@ -10,7 +10,7 @@ public sealed class ListShoppingListsHandler(IReadRepository<ShoppingListEntity>
         CancellationToken cancellationToken
     )
     {
-        var spec = new ShoppingListsWithDetailsSpec();
+        var spec = new ShoppingListsWithDetailsSpec(request.OwnerId);
         var lists = await repository.ListAsync(spec, cancellationToken);
         return Result.Success(lists);
     }

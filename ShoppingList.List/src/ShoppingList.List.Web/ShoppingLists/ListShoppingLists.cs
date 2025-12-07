@@ -11,7 +11,14 @@ public class ListShoppingLists(IMediator mediator)
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await mediator.Send(new ListShoppingListsQuery(), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(new ListShoppingListsQuery(ownerId.Value), ct);
         Response = result.Value.Select(l => l.ToRecord()).ToList();
     }
 }

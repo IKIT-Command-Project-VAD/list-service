@@ -2,6 +2,7 @@ namespace ShoppingList.List.UseCases.ShareLinks;
 
 public record CreateShareLinkCommand(
     Guid ListId,
+    Guid OwnerId,
     Guid CreatedBy,
     SharePermissionType PermissionType,
     DateTimeOffset? ExpiresAt
@@ -16,7 +17,7 @@ public sealed class CreateShareLinkHandler(IRepository<ShareLinkEntity> shareRep
     )
     {
         var list = await listRepo.GetByIdAsync(request.ListId, cancellationToken);
-        if (list is null)
+        if (list is null || list.OwnerId != request.OwnerId)
             return Result.NotFound();
 
         var link = list.AddShareLink(request.CreatedBy, request.PermissionType, request.ExpiresAt);

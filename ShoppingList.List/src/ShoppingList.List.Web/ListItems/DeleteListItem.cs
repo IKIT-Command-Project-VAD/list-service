@@ -12,7 +12,14 @@ public class DeleteListItem(IMediator mediator) : Endpoint<DeleteListItemRequest
 
     public override async Task HandleAsync(DeleteListItemRequest req, CancellationToken ct)
     {
-        var result = await mediator.Send(new DeleteListItemCommand(req.ListId, req.ItemId), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(new DeleteListItemCommand(req.ListId, ownerId.Value, req.ItemId), ct);
         if (result.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);

@@ -15,8 +15,15 @@ public class CreateShareLink(IMediator mediator)
 
     public override async Task HandleAsync(CreateShareLinkRequest req, CancellationToken ct)
     {
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
         var createResult = await mediator.Send(
-            new CreateShareLinkCommand(req.ListId, req.CreatedBy, req.PermissionType, req.ExpiresAt),
+            new CreateShareLinkCommand(req.ListId, ownerId.Value, req.CreatedBy, req.PermissionType, req.ExpiresAt),
             ct
         );
         if (createResult.Status == ResultStatus.NotFound)
@@ -26,7 +33,7 @@ public class CreateShareLink(IMediator mediator)
         }
 
         var getResult = await mediator.Send(
-            new GetShareLinkQuery(req.ListId, createResult.Value.Id),
+            new GetShareLinkQuery(req.ListId, createResult.Value.Id, ownerId.Value),
             ct
         );
         Response = getResult.Value.ToRecord();

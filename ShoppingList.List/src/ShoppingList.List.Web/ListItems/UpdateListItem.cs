@@ -14,9 +14,17 @@ public class UpdateListItem(IMediator mediator)
 
     public override async Task HandleAsync(UpdateListItemRequest req, CancellationToken ct)
     {
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
         var updateResult = await mediator.Send(
             new UpdateListItemCommand(
                 req.ListId,
+                ownerId.Value,
                 req.ItemId,
                 req.Name,
                 req.Quantity,
@@ -40,7 +48,10 @@ public class UpdateListItem(IMediator mediator)
             return;
         }
 
-        var getResult = await mediator.Send(new GetListItemQuery(req.ListId, req.ItemId), ct);
+        var getResult = await mediator.Send(
+            new GetListItemQuery(req.ListId, req.ItemId, ownerId.Value),
+            ct
+        );
         Response = getResult.Value.ToRecord();
     }
 }

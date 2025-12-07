@@ -13,7 +13,17 @@ public class GetListItem(IMediator mediator) : Endpoint<GetListItemRequest, List
 
     public override async Task HandleAsync(GetListItemRequest req, CancellationToken ct)
     {
-        var result = await mediator.Send(new GetListItemQuery(req.ListId, req.ItemId), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(
+            new GetListItemQuery(req.ListId, req.ItemId, ownerId.Value),
+            ct
+        );
         if (!result.IsSuccess)
         {
             await SendNotFoundAsync(ct);

@@ -6,6 +6,7 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Serilog;
 global using Serilog.Extensions.Logging;
 global using ShoppingList.List.UseCases.ShoppingLists;
+global using ShoppingList.List.Web.Extensions;
 global using CategoryEntity = ShoppingList.List.Core.ShoppingListAggregate.Category;
 global using ListItemEntity = ShoppingList.List.Core.ShoppingListAggregate.ListItem;
 global using ShareLinkEntity = ShoppingList.List.Core.ShoppingListAggregate.ShareLink;

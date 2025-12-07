@@ -14,9 +14,17 @@ public class CreateListItem(IMediator mediator)
 
     public override async Task HandleAsync(CreateListItemRequest req, CancellationToken ct)
     {
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
         var createResult = await mediator.Send(
             new CreateListItemCommand(
                 req.ListId,
+                ownerId.Value,
                 req.Name,
                 req.Quantity,
                 req.Unit,
@@ -35,7 +43,7 @@ public class CreateListItem(IMediator mediator)
         }
 
         var getResult = await mediator.Send(
-            new GetListItemQuery(req.ListId, createResult.Value.Id),
+            new GetListItemQuery(req.ListId, createResult.Value.Id, ownerId.Value),
             ct
         );
 

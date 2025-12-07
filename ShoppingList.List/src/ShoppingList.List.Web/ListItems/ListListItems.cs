@@ -14,7 +14,14 @@ public class ListListItems(IMediator mediator)
 
     public override async Task HandleAsync(ListListItemsRequest req, CancellationToken ct)
     {
-        var result = await mediator.Send(new ListListItemsQuery(req.ListId), ct);
+        var ownerId = User.GetUserIdAsGuid();
+        if (ownerId is null)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var result = await mediator.Send(new ListListItemsQuery(req.ListId, ownerId.Value), ct);
         Response = result.Value.Select(i => i.ToRecord()).ToList();
     }
 }

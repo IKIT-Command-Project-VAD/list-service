@@ -2,16 +2,19 @@
 
 @host=https://localhost
 @port=57679
+@token=eyJhbGciOi...your.jwt...
+
+# Common auth header (replace token above)
+###
+GET {{host}}:{{port}}/api/lists
+Authorization: Bearer {{token}}
 
 // Shopping lists
 ###
-GET {{host}}:{{port}}/api/lists
-
-###
 POST {{host}}:{{port}}/api/lists
 Content-Type: application/json
+Authorization: Bearer {{token}}
 {
-  "ownerId": "00000000-0000-0000-0000-000000000001",
   "name": "Weekly groceries"
 }
 
@@ -19,33 +22,39 @@ Content-Type: application/json
 @listId={{listId}}
 PUT {{host}}:{{port}}/api/lists/{{listId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 {
   "name": "Updated list name"
 }
 
 ###
 DELETE {{host}}:{{port}}/api/lists/{{listId}}
+Authorization: Bearer {{token}}
 
 // List items
 ###
 GET {{host}}:{{port}}/api/lists/{{listId}}/items
+Authorization: Bearer {{token}}
 
 ###
 POST {{host}}:{{port}}/api/lists/{{listId}}/items
 Content-Type: application/json
+Authorization: Bearer {{token}}
 {
   "name": "Milk",
   "quantity": 2,
   "unit": "l",
   "price": 2.50,
   "currency": "USD",
-  "isChecked": false
+  "isChecked": false,
+  "categoryId": null
 }
 
 ###
 @itemId={{itemId}}
 PUT {{host}}:{{port}}/api/lists/{{listId}}/items/{{itemId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 {
   "name": "Oat milk",
   "quantity": 3,
@@ -57,14 +66,17 @@ Content-Type: application/json
 
 ###
 DELETE {{host}}:{{port}}/api/lists/{{listId}}/items/{{itemId}}
+Authorization: Bearer {{token}}
 
 // Categories
 ###
 GET {{host}}:{{port}}/api/categories
+Authorization: Bearer {{token}}
 
 ###
 POST {{host}}:{{port}}/api/categories
 Content-Type: application/json
+Authorization: Bearer {{token}}
 {
   "name": "Dairy",
   "icon": "🧀"
@@ -73,3 +85,29 @@ Content-Type: application/json
 // Share links
 ###
 GET {{host}}:{{port}}/api/lists/{{listId}}/share-links
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}:{{port}}/api/lists/{{listId}}/share-links
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+  "createdBy": "00000000-0000-0000-0000-000000000001",
+  "permissionType": "Write",
+  "expiresAt": null
+}
+
+###
+@shareId={{shareId}}
+PUT {{host}}:{{port}}/api/lists/{{listId}}/share-links/{{shareId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+  "permissionType": "Read",
+  "expiresAt": null,
+  "isActive": true
+}
+
+###
+DELETE {{host}}:{{port}}/api/lists/{{listId}}/share-links/{{shareId}}
+Authorization: Bearer {{token}}

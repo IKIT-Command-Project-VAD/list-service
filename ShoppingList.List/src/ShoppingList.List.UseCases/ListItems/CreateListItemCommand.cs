@@ -2,6 +2,7 @@ namespace ShoppingList.List.UseCases.ListItems;
 
 public record CreateListItemCommand(
     Guid ListId,
+    Guid OwnerId,
     string Name,
     decimal Quantity,
     string? Unit,
@@ -11,7 +12,10 @@ public record CreateListItemCommand(
     bool IsChecked
 ) : ICommand<Result<ListItemEntity>>;
 
-public sealed class CreateListItemHandler(IRepository<ListItemEntity> itemRepo, IRepository<ShoppingListEntity> listRepo)
+public sealed class CreateListItemHandler(
+    IRepository<ListItemEntity> itemRepo,
+    IRepository<ShoppingListEntity> listRepo
+)
     : ICommandHandler<CreateListItemCommand, Result<ListItemEntity>>
 {
     public async Task<Result<ListItemEntity>> Handle(
@@ -20,7 +24,7 @@ public sealed class CreateListItemHandler(IRepository<ListItemEntity> itemRepo, 
     )
     {
         var list = await listRepo.GetByIdAsync(request.ListId, cancellationToken);
-        if (list is null)
+        if (list is null || list.OwnerId != request.OwnerId)
             return Result.NotFound();
 
         var item = list.AddItem(
