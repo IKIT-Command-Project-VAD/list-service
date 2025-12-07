@@ -1,2 +1,8 @@
 global using Ardalis.Result;
 global using Ardalis.SharedKernel;
+global using MediatR;
+global using ShoppingListEntity = ShoppingList.List.Core.ShoppingListAggregate.ShoppingList;
+global using ListItemEntity = ShoppingList.List.Core.ShoppingListAggregate.ListItem;
+global using CategoryEntity = ShoppingList.List.Core.ShoppingListAggregate.Category;
+global using ShareLinkEntity = ShoppingList.List.Core.ShoppingListAggregate.ShareLink;
+global using ShoppingList.List.Core.ShoppingListAggregate.Enums;
