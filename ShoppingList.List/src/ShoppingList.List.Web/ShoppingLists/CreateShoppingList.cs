@@ -1,8 +1,7 @@
-using ShoppingList.List.UseCases.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists;
 
-namespace ShoppingList.List.Web.ShoppingLists;
-
-public class CreateShoppingList(IMediator mediator) : Endpoint<CreateShoppingListRequest, ShoppingListRecord>
+public class CreateShoppingList(IMediator mediator)
+    : Endpoint<CreateShoppingListRequest, ShoppingListRecord>
 {
     public override void Configure()
     {
@@ -12,7 +11,10 @@ public class CreateShoppingList(IMediator mediator) : Endpoint<CreateShoppingLis
 
     public override async Task HandleAsync(CreateShoppingListRequest req, CancellationToken ct)
     {
-        var createResult = await mediator.Send(new CreateShoppingListCommand(req.OwnerId, req.Name), ct);
+        var createResult = await mediator.Send(
+            new CreateShoppingListCommand(req.OwnerId, req.Name),
+            ct
+        );
         if (createResult.Status == ResultStatus.Invalid)
         {
             await SendErrorsAsync(cancellation: ct);
@@ -35,4 +37,3 @@ public record CreateShoppingListRequest
     public Guid OwnerId { get; init; }
     public string Name { get; init; } = string.Empty;
 }
-

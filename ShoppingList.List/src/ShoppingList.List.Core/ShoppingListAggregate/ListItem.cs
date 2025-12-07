@@ -1,6 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
-
-namespace ShoppingList.List.Core.ShoppingListAggregate;
+﻿namespace ShoppingList.List.Core.ShoppingListAggregate;
 
 public sealed class ListItem : EntityBase<Guid>
 {
@@ -100,4 +98,3 @@ public sealed class ListItem : EntityBase<Guid>
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 }
-

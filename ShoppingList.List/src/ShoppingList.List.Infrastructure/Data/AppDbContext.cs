@@ -1,6 +1,5 @@
-using ShoppingList.List.Core.ContributorAggregate;
+﻿using ShoppingList.List.Core.ContributorAggregate;
 using ShoppingList.List.Core.ShoppingListAggregate.Enums;
-using ShoppingList.List.Infrastructure.Data.Config;
 
 namespace ShoppingList.List.Infrastructure.Data;
 

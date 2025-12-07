@@ -1,8 +1,7 @@
-using ShoppingList.List.UseCases.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists;
 
-namespace ShoppingList.List.Web.ShoppingLists;
-
-public class GetShoppingList(IMediator mediator) : Endpoint<GetShoppingListRequest, ShoppingListRecord>
+public class GetShoppingList(IMediator mediator)
+    : Endpoint<GetShoppingListRequest, ShoppingListRecord>
 {
     public override void Configure()
     {
@@ -27,4 +26,3 @@ public record GetShoppingListRequest
 {
     public Guid Id { get; init; }
 }
-

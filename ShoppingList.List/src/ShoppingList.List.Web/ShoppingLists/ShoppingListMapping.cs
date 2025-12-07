@@ -1,6 +1,4 @@
-using ShoppingList.List.UseCases.ShoppingLists;
-
-namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists;
 
 internal static class ShoppingListMapping
 {
@@ -49,4 +47,3 @@ internal static class ShoppingListMapping
             link.IsActive
         );
 }
-

@@ -1,12 +1,12 @@
-global using Ardalis.Result;
+﻿global using Ardalis.Result;
 global using FastEndpoints;
 global using FastEndpoints.Swagger;
 global using MediatR;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
-global using ShoppingList.List.UseCases.ShoppingLists;
-global using ShoppingListEntity = ShoppingList.List.Core.ShoppingListAggregate.ShoppingList;
-global using ListItemEntity = ShoppingList.List.Core.ShoppingListAggregate.ListItem;
-global using CategoryEntity = ShoppingList.List.Core.ShoppingListAggregate.Category;
-global using ShareLinkEntity = ShoppingList.List.Core.ShoppingListAggregate.ShareLink;
 global using Serilog;
 global using Serilog.Extensions.Logging;
+global using ShoppingList.List.UseCases.ShoppingLists;
+global using CategoryEntity = ShoppingList.List.Core.ShoppingListAggregate.Category;
+global using ListItemEntity = ShoppingList.List.Core.ShoppingListAggregate.ListItem;
+global using ShareLinkEntity = ShoppingList.List.Core.ShoppingListAggregate.ShareLink;
+global using ShoppingListEntity = ShoppingList.List.Core.ShoppingListAggregate.ShoppingList;

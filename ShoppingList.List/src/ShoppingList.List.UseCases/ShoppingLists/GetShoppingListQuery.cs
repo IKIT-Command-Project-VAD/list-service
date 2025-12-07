@@ -1,6 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate.Specifications;
-
-namespace ShoppingList.List.UseCases.ShoppingLists;
+﻿namespace ShoppingList.List.UseCases.ShoppingLists;
 
 public record GetShoppingListQuery(Guid Id) : IQuery<Result<ShoppingListEntity>>;
 
@@ -17,4 +15,3 @@ public sealed class GetShoppingListHandler(IReadRepository<ShoppingListEntity> r
         return list is null ? Result.NotFound() : Result.Success(list);
     }
 }
-

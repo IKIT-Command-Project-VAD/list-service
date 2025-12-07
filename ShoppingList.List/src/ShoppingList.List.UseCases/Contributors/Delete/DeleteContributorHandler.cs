@@ -1,4 +1,4 @@
-using ShoppingList.List.Core.Interfaces;
+﻿using ShoppingList.List.Core.Interfaces;
 
 namespace ShoppingList.List.UseCases.Contributors.Delete;
 

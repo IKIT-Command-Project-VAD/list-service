@@ -1,12 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+﻿using ShoppingList.List.Core.ShoppingListAggregate.Enums;
 using ShoppingList.List.UseCases.ShareLinks;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShareLinks;
 
-public class UpdateShareLink(IMediator mediator)
-    : Endpoint<UpdateShareLinkRequest, ShareLinkRecord>
+public class UpdateShareLink(IMediator mediator) : Endpoint<UpdateShareLinkRequest, ShareLinkRecord>
 {
     public override void Configure()
     {
@@ -46,4 +44,3 @@ public record UpdateShareLinkRequest
     public DateTimeOffset? ExpiresAt { get; init; }
     public bool IsActive { get; init; }
 }
-

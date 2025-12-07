@@ -1,10 +1,10 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Ardalis.GuardClauses;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
 using ShoppingList.List.Core.Interfaces;
 using ShoppingList.List.Infrastructure;
 using ShoppingList.List.Infrastructure.Email;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ShoppingList.List.Web.Configurations;
 

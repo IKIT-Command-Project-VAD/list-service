@@ -1,8 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using FastEndpoints;
-using ShoppingList.List.Core.ContributorAggregate;
 using Microsoft.Extensions.Logging;
+using ShoppingList.List.Core.ContributorAggregate;
 
 namespace ShoppingList.List.UseCases.Contributors.Create;
 

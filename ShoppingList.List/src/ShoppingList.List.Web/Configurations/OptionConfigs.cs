@@ -1,4 +1,4 @@
-using Ardalis.ListStartupServices;
+﻿using Ardalis.ListStartupServices;
 using ShoppingList.List.Infrastructure.Email;
 
 namespace ShoppingList.List.Web.Configurations;

@@ -1,5 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate;
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+﻿using ShoppingList.List.Core.ShoppingListAggregate;
 
 namespace ShoppingList.List.Infrastructure.Data.Config;
 
@@ -12,7 +11,11 @@ public class ShareLinkConfiguration : IEntityTypeConfiguration<ShareLink>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).HasColumnName("share_id").HasColumnType("uuid");
         builder.Property(x => x.ListId).HasColumnName("list_id").HasColumnType("uuid");
-        builder.Property(x => x.ShareToken).HasColumnName("share_token").HasMaxLength(255).IsRequired();
+        builder
+            .Property(x => x.ShareToken)
+            .HasColumnName("share_token")
+            .HasMaxLength(255)
+            .IsRequired();
         builder
             .Property(x => x.PermissionType)
             .HasColumnName("share_permission_type")
@@ -23,4 +26,3 @@ public class ShareLinkConfiguration : IEntityTypeConfiguration<ShareLink>
         builder.Property(x => x.IsActive).HasColumnName("is_active");
     }
 }
-

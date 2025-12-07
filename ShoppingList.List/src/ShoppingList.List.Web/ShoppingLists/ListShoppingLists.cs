@@ -1,8 +1,7 @@
-using ShoppingList.List.UseCases.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists;
 
-namespace ShoppingList.List.Web.ShoppingLists;
-
-public class ListShoppingLists(IMediator mediator) : EndpointWithoutRequest<List<ShoppingListRecord>>
+public class ListShoppingLists(IMediator mediator)
+    : EndpointWithoutRequest<List<ShoppingListRecord>>
 {
     public override void Configure()
     {
@@ -16,4 +15,3 @@ public class ListShoppingLists(IMediator mediator) : EndpointWithoutRequest<List
         Response = result.Value.Select(l => l.ToRecord()).ToList();
     }
 }
-

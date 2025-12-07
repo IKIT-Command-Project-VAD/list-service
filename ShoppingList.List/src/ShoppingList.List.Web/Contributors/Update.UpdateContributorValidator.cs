@@ -1,5 +1,5 @@
+﻿using FluentValidation;
 using ShoppingList.List.Infrastructure.Data.Config;
-using FluentValidation;
 
 namespace ShoppingList.List.Web.Contributors;
 

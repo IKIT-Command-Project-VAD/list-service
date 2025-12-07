@@ -1,6 +1,5 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using ShoppingList.List.Core.ShoppingListAggregate;
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
 
 namespace ShoppingList.List.Infrastructure.Data.Config;
 
@@ -16,7 +15,10 @@ public class BatchOperationConfiguration : IEntityTypeConfiguration<BatchOperati
         builder.Property(x => x.UserId).HasColumnName("user_id").HasColumnType("uuid");
         builder.Property(x => x.Status).HasColumnName("status").HasColumnType("batch_status");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasColumnType("timestamptz");
-        builder.Property(x => x.CompletedAt).HasColumnName("completed_at").HasColumnType("timestamptz");
+        builder
+            .Property(x => x.CompletedAt)
+            .HasColumnName("completed_at")
+            .HasColumnType("timestamptz");
         builder.Property(x => x.ErrorMessage).HasColumnName("error_message");
 
         builder
@@ -38,4 +40,3 @@ public class BatchOperationConfiguration : IEntityTypeConfiguration<BatchOperati
         builder.HasOne(x => x.List).WithMany().HasForeignKey(x => x.ListId);
     }
 }
-

@@ -1,5 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate;
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+﻿using ShoppingList.List.Core.ShoppingListAggregate;
 
 namespace ShoppingList.List.Infrastructure.Data.Config;
 
@@ -13,7 +12,10 @@ public class ListChangeConfiguration : IEntityTypeConfiguration<ListChange>
         builder.Property(x => x.Id).HasColumnName("change_id").HasColumnType("uuid");
         builder.Property(x => x.ListId).HasColumnName("list_id").HasColumnType("uuid");
         builder.Property(x => x.ItemId).HasColumnName("item_id").HasColumnType("uuid");
-        builder.Property(x => x.ChangeType).HasColumnName("change_type").HasColumnType("change_type");
+        builder
+            .Property(x => x.ChangeType)
+            .HasColumnName("change_type")
+            .HasColumnType("change_type");
         builder.Property(x => x.FieldName).HasColumnName("field_name").HasMaxLength(100);
         builder.Property(x => x.OldValue).HasColumnName("old_value");
         builder.Property(x => x.NewValue).HasColumnName("new_value");
@@ -24,4 +26,3 @@ public class ListChangeConfiguration : IEntityTypeConfiguration<ListChange>
         builder.HasOne(x => x.List).WithMany().HasForeignKey(x => x.ListId);
     }
 }
-

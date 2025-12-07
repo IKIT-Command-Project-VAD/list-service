@@ -1,6 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate.Specifications;
-
-namespace ShoppingList.List.UseCases.ShoppingLists;
+﻿namespace ShoppingList.List.UseCases.ShoppingLists;
 
 public record ListShoppingListsQuery() : IQuery<Result<List<ShoppingListEntity>>>;
 
@@ -17,4 +15,3 @@ public sealed class ListShoppingListsHandler(IReadRepository<ShoppingListEntity>
         return Result.Success(lists);
     }
 }
-

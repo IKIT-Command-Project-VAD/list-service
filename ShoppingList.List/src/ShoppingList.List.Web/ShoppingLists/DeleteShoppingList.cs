@@ -1,6 +1,4 @@
-﻿using ShoppingList.List.UseCases.ShoppingLists;
-
-namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists;
 
 public class DeleteShoppingList(IMediator mediator) : Endpoint<DeleteShoppingListRequest>
 {
