@@ -1,0 +1,75 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+@host=https://localhost
+@port=57679
+
+// Shopping lists
+###
+GET {{host}}:{{port}}/api/lists
+
+###
+POST {{host}}:{{port}}/api/lists
+Content-Type: application/json
+{
+  "ownerId": "00000000-0000-0000-0000-000000000001",
+  "name": "Weekly groceries"
+}
+
+###
+@listId={{listId}}
+PUT {{host}}:{{port}}/api/lists/{{listId}}
+Content-Type: application/json
+{
+  "name": "Updated list name"
+}
+
+###
+DELETE {{host}}:{{port}}/api/lists/{{listId}}
+
+// List items
+###
+GET {{host}}:{{port}}/api/lists/{{listId}}/items
+
+###
+POST {{host}}:{{port}}/api/lists/{{listId}}/items
+Content-Type: application/json
+{
+  "name": "Milk",
+  "quantity": 2,
+  "unit": "l",
+  "price": 2.50,
+  "currency": "USD",
+  "isChecked": false
+}
+
+###
+@itemId={{itemId}}
+PUT {{host}}:{{port}}/api/lists/{{listId}}/items/{{itemId}}
+Content-Type: application/json
+{
+  "name": "Oat milk",
+  "quantity": 3,
+  "unit": "l",
+  "price": 3.10,
+  "currency": "USD",
+  "isChecked": true
+}
+
+###
+DELETE {{host}}:{{port}}/api/lists/{{listId}}/items/{{itemId}}
+
+// Categories
+###
+GET {{host}}:{{port}}/api/categories
+
+###
+POST {{host}}:{{port}}/api/categories
+Content-Type: application/json
+{
+  "name": "Dairy",
+  "icon": "🧀"
+}
+
+// Share links
+###
+GET {{host}}:{{port}}/api/lists/{{listId}}/share-links

@@ -1,0 +1,19 @@
+name: shoppinglist-list-dev
+
+services:
+  db:
+    image: postgres:16
+    container_name: shoppinglist-list-postgres
+    restart: unless-stopped
+
+    env_file:
+      - .env.dev
+
+    ports:
+      - "${POSTGRES_PORT_EXTERNAL}:${POSTGRES_PORT_INTERNAL}"
+
+    volumes:
+      - shoppinglist-list_pgdata:/var/lib/postgresql/data
+
+volumes:
+  shoppinglist-list_pgdata:

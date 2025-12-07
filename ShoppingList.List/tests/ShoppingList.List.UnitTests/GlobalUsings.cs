@@ -1,0 +1,9 @@
+global using System.Runtime.CompilerServices;
+global using Ardalis.SharedKernel;
+global using ShoppingList.List.Core.ContributorAggregate;
+global using ShoppingList.List.UseCases.Contributors.Create;
+global using MediatR;
+global using Microsoft.Extensions.Logging;
+global using NSubstitute;
+global using Shouldly;
+global using Xunit;
