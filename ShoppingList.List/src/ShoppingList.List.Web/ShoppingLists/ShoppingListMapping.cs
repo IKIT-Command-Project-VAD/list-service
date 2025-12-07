@@ -1,3 +1,5 @@
+using ShoppingList.List.UseCases.ShoppingLists;
+
 namespace ShoppingList.List.Web.ShoppingLists;
 
 internal static class ShoppingListMapping

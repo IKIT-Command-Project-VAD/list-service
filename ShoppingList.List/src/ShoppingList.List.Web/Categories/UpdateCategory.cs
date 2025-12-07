@@ -1,31 +1,36 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.Categories;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.Categories;
 
-public class UpdateCategory(AppDbContext dbContext)
+public class UpdateCategory(IMediator mediator)
     : Endpoint<UpdateCategoryRequest, CategoryRecord>
 {
     public override void Configure()
     {
         Put("/api/categories/{Id:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(UpdateCategoryRequest req, CancellationToken ct)
     {
-        var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Id == req.Id, ct);
-        if (category is null)
+        var updateResult = await mediator.Send(
+            new UpdateCategoryCommand(req.Id, req.Name, req.Icon),
+            ct
+        );
+        if (updateResult.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
+        if (updateResult.Status == ResultStatus.Invalid)
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
 
-        category.Update(req.Name, req.Icon);
-        await dbContext.SaveChangesAsync(ct);
-
-        Response = category.ToRecord();
+        var getResult = await mediator.Send(new GetCategoryQuery(req.Id), ct);
+        Response = getResult.Value.ToRecord();
     }
 }
 

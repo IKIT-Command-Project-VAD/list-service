@@ -1,6 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
-
-namespace ShoppingList.List.Web.ShoppingLists;
+namespace ShoppingList.List.UseCases.ShoppingLists;
 
 public record ShoppingListRecord(
     Guid Id,

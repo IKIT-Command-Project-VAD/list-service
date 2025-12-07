@@ -1,24 +1,32 @@
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShoppingLists;
 
-public class CreateShoppingList(AppDbContext dbContext)
-    : Endpoint<CreateShoppingListRequest, ShoppingListRecord>
+public class CreateShoppingList(IMediator mediator) : Endpoint<CreateShoppingListRequest, ShoppingListRecord>
 {
     public override void Configure()
     {
         Post("/api/lists");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(CreateShoppingListRequest req, CancellationToken ct)
     {
-        var list = ShoppingListEntity.Create(req.OwnerId, req.Name);
+        var createResult = await mediator.Send(new CreateShoppingListCommand(req.OwnerId, req.Name), ct);
+        if (createResult.Status == ResultStatus.Invalid)
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
 
-        dbContext.ShoppingLists.Add(list);
-        await dbContext.SaveChangesAsync(ct);
+        var getResult = await mediator.Send(new GetShoppingListQuery(createResult.Value), ct);
+        if (!getResult.IsSuccess)
+        {
+            await SendNotFoundAsync(ct);
+            return;
+        }
 
-        Response = list.ToRecord();
+        Response = getResult.Value.ToRecord();
     }
 }
 

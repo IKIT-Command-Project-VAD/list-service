@@ -1,34 +1,37 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShoppingLists;
 
-public class UpdateShoppingList(AppDbContext dbContext)
-    : Endpoint<UpdateShoppingListRequest, ShoppingListRecord>
+public class UpdateShoppingList(IMediator mediator) : Endpoint<UpdateShoppingListRequest, ShoppingListRecord>
 {
     public override void Configure()
     {
         Put("/api/lists/{Id:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(UpdateShoppingListRequest req, CancellationToken ct)
     {
-        var list = await dbContext
-            .ShoppingLists.Include(x => x.Items)
-            .Include(x => x.ShareLinks)
-            .FirstOrDefaultAsync(x => x.Id == req.Id, ct);
+        var updateResult = await mediator.Send(new UpdateShoppingListCommand(req.Id, req.Name), ct);
+        if (updateResult.Status == ResultStatus.NotFound)
+        {
+            await SendNotFoundAsync(ct);
+            return;
+        }
+        if (updateResult.Status == ResultStatus.Invalid)
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
 
-        if (list is null)
+        var getResult = await mediator.Send(new GetShoppingListQuery(req.Id), ct);
+        if (!getResult.IsSuccess)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        list.UpdateName(req.Name);
-        await dbContext.SaveChangesAsync(ct);
-
-        Response = list.ToRecord();
+        Response = getResult.Value.ToRecord();
     }
 }
 

@@ -1,25 +1,21 @@
-using ShoppingList.List.Core.ShoppingListAggregate;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.Categories;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.Categories;
 
-public class CreateCategory(AppDbContext dbContext) : Endpoint<CreateCategoryRequest, CategoryRecord>
+public class CreateCategory(IMediator mediator) : Endpoint<CreateCategoryRequest, CategoryRecord>
 {
     public override void Configure()
     {
         Post("/api/categories");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(CreateCategoryRequest req, CancellationToken ct)
     {
-        var category = new Category(req.Name, req.Icon);
-
-        dbContext.Categories.Add(category);
-        await dbContext.SaveChangesAsync(ct);
-
-        Response = category.ToRecord();
+        var createResult = await mediator.Send(new CreateCategoryCommand(req.Name, req.Icon), ct);
+        var getResult = await mediator.Send(new GetCategoryQuery(createResult.Value.Id), ct);
+        Response = getResult.Value.ToRecord();
     }
 }
 

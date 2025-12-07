@@ -1,31 +1,23 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShareLinks;
 
 namespace ShoppingList.List.Web.ShareLinks;
 
-public class DeleteShareLink(AppDbContext dbContext) : Endpoint<DeleteShareLinkRequest>
+public class DeleteShareLink(IMediator mediator) : Endpoint<DeleteShareLinkRequest>
 {
     public override void Configure()
     {
         Delete("/api/lists/{ListId:guid}/share-links/{ShareId:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(DeleteShareLinkRequest req, CancellationToken ct)
     {
-        var link = await dbContext.ShareLinks.FirstOrDefaultAsync(
-            x => x.ListId == req.ListId && x.Id == req.ShareId,
-            ct
-        );
-
-        if (link is null)
+        var result = await mediator.Send(new DeleteShareLinkCommand(req.ListId, req.ShareId), ct);
+        if (result.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-
-        dbContext.ShareLinks.Remove(link);
-        await dbContext.SaveChangesAsync(ct);
 
         await SendNoContentAsync(ct);
     }

@@ -1,36 +1,40 @@
 using Microsoft.EntityFrameworkCore;
 using ShoppingList.List.Core.ShoppingListAggregate.Enums;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShareLinks;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShareLinks;
 
-public class UpdateShareLink(AppDbContext dbContext)
+public class UpdateShareLink(IMediator mediator)
     : Endpoint<UpdateShareLinkRequest, ShareLinkRecord>
 {
     public override void Configure()
     {
         Put("/api/lists/{ListId:guid}/share-links/{ShareId:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(UpdateShareLinkRequest req, CancellationToken ct)
     {
-        var link = await dbContext.ShareLinks.FirstOrDefaultAsync(
-            x => x.ListId == req.ListId && x.Id == req.ShareId,
+        var updateResult = await mediator.Send(
+            new UpdateShareLinkCommand(
+                req.ListId,
+                req.ShareId,
+                req.PermissionType,
+                req.ExpiresAt,
+                req.IsActive
+            ),
             ct
         );
 
-        if (link is null)
+        if (updateResult.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        link.Update(req.PermissionType, req.ExpiresAt, req.IsActive);
-        await dbContext.SaveChangesAsync(ct);
-
-        Response = link.ToRecord();
+        var getResult = await mediator.Send(new GetShareLinkQuery(req.ListId, req.ShareId), ct);
+        Response = getResult.Value.ToRecord();
     }
 }
 

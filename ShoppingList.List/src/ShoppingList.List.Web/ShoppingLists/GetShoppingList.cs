@@ -1,31 +1,25 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShoppingLists;
 
-public class GetShoppingList(AppDbContext dbContext) : Endpoint<GetShoppingListRequest, ShoppingListRecord>
+public class GetShoppingList(IMediator mediator) : Endpoint<GetShoppingListRequest, ShoppingListRecord>
 {
     public override void Configure()
     {
         Get("/api/lists/{Id:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(GetShoppingListRequest req, CancellationToken ct)
     {
-        var list = await dbContext
-            .ShoppingLists.AsNoTracking()
-            .Include(x => x.Items).ThenInclude(i => i.Category)
-            .Include(x => x.ShareLinks)
-            .FirstOrDefaultAsync(x => x.Id == req.Id, ct);
-
-        if (list is null)
+        var result = await mediator.Send(new GetShoppingListQuery(req.Id), ct);
+        if (!result.IsSuccess)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        Response = list.ToRecord();
+        Response = result.Value.ToRecord();
     }
 }
 

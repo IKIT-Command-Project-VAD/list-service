@@ -1,31 +1,27 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShareLinks;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShareLinks;
 
-public class GetShareLink(AppDbContext dbContext)
+public class GetShareLink(IMediator mediator)
     : Endpoint<GetShareLinkRequest, ShareLinkRecord>
 {
     public override void Configure()
     {
         Get("/api/lists/{ListId:guid}/share-links/{ShareId:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(GetShareLinkRequest req, CancellationToken ct)
     {
-        var link = await dbContext
-            .ShareLinks.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.ListId == req.ListId && x.Id == req.ShareId, ct);
-
-        if (link is null)
+        var result = await mediator.Send(new GetShareLinkQuery(req.ListId, req.ShareId), ct);
+        if (!result.IsSuccess)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        Response = link.ToRecord();
+        Response = result.Value.ToRecord();
     }
 }
 

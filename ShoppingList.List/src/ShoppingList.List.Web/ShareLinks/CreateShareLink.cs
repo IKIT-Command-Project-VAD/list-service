@@ -1,35 +1,35 @@
-using Microsoft.EntityFrameworkCore;
 using ShoppingList.List.Core.ShoppingListAggregate.Enums;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ShareLinks;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShareLinks;
 
-public class CreateShareLink(AppDbContext dbContext)
+public class CreateShareLink(IMediator mediator)
     : Endpoint<CreateShareLinkRequest, ShareLinkRecord>
 {
     public override void Configure()
     {
         Post("/api/lists/{ListId:guid}/share-links");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(CreateShareLinkRequest req, CancellationToken ct)
     {
-        var list = await dbContext
-            .ShoppingLists.Include(x => x.ShareLinks)
-            .FirstOrDefaultAsync(x => x.Id == req.ListId, ct);
-
-        if (list is null)
+        var createResult = await mediator.Send(
+            new CreateShareLinkCommand(req.ListId, req.CreatedBy, req.PermissionType, req.ExpiresAt),
+            ct
+        );
+        if (createResult.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        var link = list.AddShareLink(req.CreatedBy, req.PermissionType, req.ExpiresAt);
-
-        await dbContext.SaveChangesAsync(ct);
-        Response = link.ToRecord();
+        var getResult = await mediator.Send(
+            new GetShareLinkQuery(req.ListId, createResult.Value.Id),
+            ct
+        );
+        Response = getResult.Value.ToRecord();
     }
 }
 

@@ -1,22 +1,21 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.Categories;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.Categories;
 
-public class ListCategories(AppDbContext dbContext)
+public class ListCategories(IMediator mediator)
     : EndpointWithoutRequest<List<CategoryRecord>>
 {
     public override void Configure()
     {
         Get("/api/categories");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var categories = await dbContext.Categories.AsNoTracking().ToListAsync(ct);
-        Response = categories.Select(c => c.ToRecord()).ToList();
+        var result = await mediator.Send(new ListCategoriesQuery(), ct);
+        Response = result.Value.Select(c => c.ToRecord()).ToList();
     }
 }
 

@@ -1,52 +1,45 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ListItems;
 using ShoppingList.List.Web.ShoppingLists;
 
 namespace ShoppingList.List.Web.ListItems;
 
-public class CreateListItem(AppDbContext dbContext)
+public class CreateListItem(IMediator mediator)
     : Endpoint<CreateListItemRequest, ListItemRecord>
 {
     public override void Configure()
     {
         Post("/api/lists/{ListId:guid}/items");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(CreateListItemRequest req, CancellationToken ct)
     {
-        var list = await dbContext
-            .ShoppingLists.Include(x => x.Items)
-            .FirstOrDefaultAsync(x => x.Id == req.ListId, ct);
+        var createResult = await mediator.Send(
+            new CreateListItemCommand(
+                req.ListId,
+                req.Name,
+                req.Quantity,
+                req.Unit,
+                req.CategoryId,
+                req.Price,
+                req.Currency,
+                req.IsChecked
+            ),
+            ct
+        );
 
-        if (list is null)
+        if (createResult.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        var item = list.AddItem(
-            name: req.Name,
-            quantity: req.Quantity,
-            unit: req.Unit,
-            categoryId: req.CategoryId,
-            price: req.Price,
-            currency: req.Currency,
-            isChecked: req.IsChecked
+        var getResult = await mediator.Send(
+            new GetListItemQuery(req.ListId, createResult.Value.Id),
+            ct
         );
 
-        await dbContext.SaveChangesAsync(ct);
-
-        // Load category for response if provided
-        if (req.CategoryId.HasValue)
-        {
-            item = await dbContext.ListItems.Include(i => i.Category).FirstAsync(
-                i => i.Id == item.Id,
-                ct
-            );
-        }
-
-        Response = item.ToRecord();
+        Response = getResult.Value.ToRecord();
     }
 }
 

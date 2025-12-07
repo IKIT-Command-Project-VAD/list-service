@@ -16,7 +16,7 @@ public class Update(IMediator _mediator)
     public override void Configure()
     {
         Put(UpdateContributorRequest.Route);
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(

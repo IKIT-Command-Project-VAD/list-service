@@ -1,27 +1,28 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+﻿using ShoppingList.List.UseCases.ShoppingLists;
 
 namespace ShoppingList.List.Web.ShoppingLists;
 
-public class DeleteShoppingList(AppDbContext dbContext) : Endpoint<DeleteShoppingListRequest>
+public class DeleteShoppingList(IMediator mediator) : Endpoint<DeleteShoppingListRequest>
 {
     public override void Configure()
     {
         Delete("/api/lists/{Id:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(DeleteShoppingListRequest req, CancellationToken ct)
     {
-        var list = await dbContext.ShoppingLists.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
-        if (list is null)
+        var result = await mediator.Send(new DeleteShoppingListCommand(req.Id), ct);
+        if (result.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-
-        list.SoftDelete();
-        await dbContext.SaveChangesAsync(ct);
+        if (result.Status == ResultStatus.Invalid)
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
 
         await SendNoContentAsync(ct);
     }
@@ -31,4 +32,3 @@ public record DeleteShoppingListRequest
 {
     public Guid Id { get; init; }
 }
-

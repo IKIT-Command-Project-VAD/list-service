@@ -13,7 +13,7 @@ public class Delete(IMediator _mediator) : Endpoint<DeleteContributorRequest>
     public override void Configure()
     {
         Delete(DeleteContributorRequest.Route);
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(

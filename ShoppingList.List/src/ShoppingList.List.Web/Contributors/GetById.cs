@@ -13,7 +13,7 @@ public class GetById(IMediator _mediator) : Endpoint<GetContributorByIdRequest, 
     public override void Configure()
     {
         Get(GetContributorByIdRequest.Route);
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(

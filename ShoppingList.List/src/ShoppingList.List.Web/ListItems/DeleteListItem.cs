@@ -1,29 +1,23 @@
-using Microsoft.EntityFrameworkCore;
-using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.UseCases.ListItems;
 
 namespace ShoppingList.List.Web.ListItems;
 
-public class DeleteListItem(AppDbContext dbContext) : Endpoint<DeleteListItemRequest>
+public class DeleteListItem(IMediator mediator) : Endpoint<DeleteListItemRequest>
 {
     public override void Configure()
     {
         Delete("/api/lists/{ListId:guid}/items/{ItemId:guid}");
-        AllowAnonymous();
+        Roles("user");
     }
 
     public override async Task HandleAsync(DeleteListItemRequest req, CancellationToken ct)
     {
-        var item = await dbContext
-            .ListItems.FirstOrDefaultAsync(i => i.ListId == req.ListId && i.Id == req.ItemId, ct);
-
-        if (item is null)
+        var result = await mediator.Send(new DeleteListItemCommand(req.ListId, req.ItemId), ct);
+        if (result.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-
-        item.SoftDelete();
-        await dbContext.SaveChangesAsync(ct);
 
         await SendNoContentAsync(ct);
     }
