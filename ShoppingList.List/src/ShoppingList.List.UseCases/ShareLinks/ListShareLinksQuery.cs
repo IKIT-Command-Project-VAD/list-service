@@ -1,13 +1,13 @@
-namespace ShoppingList.List.UseCases.ShareLinks;
+﻿namespace ShoppingList.List.UseCases.ShareLinks;
 
-public record ListShareLinksQuery(Guid ListId, Guid OwnerId) : IQuery<Result<List<ShareLinkEntity>>>;
+public record ListShareLinksQuery(Guid ListId, Guid OwnerId) : IQuery<Result<List<ShareLink>>>;
 
 public sealed class ListShareLinksHandler(
-    IReadRepository<ShareLinkEntity> repository,
+    IReadRepository<ShareLink> repository,
     IReadRepository<ShoppingListEntity> listRepo
-) : IQueryHandler<ListShareLinksQuery, Result<List<ShareLinkEntity>>>
+) : IQueryHandler<ListShareLinksQuery, Result<List<ShareLink>>>
 {
-    public async Task<Result<List<ShareLinkEntity>>> Handle(
+    public async Task<Result<List<ShareLink>>> Handle(
         ListShareLinksQuery request,
         CancellationToken cancellationToken
     )
@@ -17,10 +17,9 @@ public sealed class ListShareLinksHandler(
             return Result.NotFound();
 
         var links = await repository.ListAsync(
-            new Specification<ShareLinkEntity>(q => q.Where(x => x.ListId == request.ListId)),
+            new ShareLinksByListIdSpec(request.ListId),
             cancellationToken
         );
         return Result.Success(links);
     }
 }
-

@@ -1,6 +1,6 @@
 ﻿namespace ShoppingList.List.Core.ShoppingListAggregate;
 
-public sealed class ListItem : EntityBase<Guid>
+public sealed class ListItem : EntityBase<Guid>, IAggregateRoot
 {
     public Guid ListId { get; private set; }
     public ShoppingList? List { get; private set; }

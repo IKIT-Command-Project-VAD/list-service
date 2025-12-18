@@ -1,6 +1,8 @@
 namespace ShoppingList.List.Core.ShoppingListAggregate.Specifications;
 
-public sealed class ShareLinkByIdSpec : Specification<ShareLinkEntity>, ISingleResultSpecification
+public sealed class ShareLinkByIdSpec
+    : Specification<ShareLink>,
+        ISingleResultSpecification<ShareLink>
 {
     public ShareLinkByIdSpec(Guid listId, Guid shareId, Guid ownerId)
     {

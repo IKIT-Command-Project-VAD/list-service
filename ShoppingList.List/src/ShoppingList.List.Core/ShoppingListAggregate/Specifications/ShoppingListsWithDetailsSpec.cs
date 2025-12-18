@@ -1,6 +1,6 @@
 namespace ShoppingList.List.Core.ShoppingListAggregate.Specifications;
 
-public sealed class ShoppingListsWithDetailsSpec : Specification<ShoppingListEntity>
+public sealed class ShoppingListsWithDetailsSpec : Specification<ShoppingList>
 {
     public ShoppingListsWithDetailsSpec(Guid ownerId)
     {

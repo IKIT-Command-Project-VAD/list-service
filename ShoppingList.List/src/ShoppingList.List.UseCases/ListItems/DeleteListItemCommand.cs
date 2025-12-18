@@ -2,7 +2,7 @@ namespace ShoppingList.List.UseCases.ListItems;
 
 public record DeleteListItemCommand(Guid ListId, Guid OwnerId, Guid ItemId) : ICommand<Result>;
 
-public sealed class DeleteListItemHandler(IRepository<ListItemEntity> itemRepo)
+public sealed class DeleteListItemHandler(IRepository<ListItem> itemRepo)
     : ICommandHandler<DeleteListItemCommand, Result>
 {
     public async Task<Result> Handle(

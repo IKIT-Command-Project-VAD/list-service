@@ -1,11 +1,11 @@
-namespace ShoppingList.List.UseCases.Categories;
+﻿namespace ShoppingList.List.UseCases.Categories;
 
-public record ListCategoriesQuery() : IQuery<Result<List<CategoryEntity>>>;
+public record ListCategoriesQuery() : IQuery<Result<List<Category>>>;
 
-public sealed class ListCategoriesHandler(IReadRepository<CategoryEntity> repository)
-    : IQueryHandler<ListCategoriesQuery, Result<List<CategoryEntity>>>
+public sealed class ListCategoriesHandler(IReadRepository<Category> repository)
+    : IQueryHandler<ListCategoriesQuery, Result<List<Category>>>
 {
-    public async Task<Result<List<CategoryEntity>>> Handle(
+    public async Task<Result<List<Category>>> Handle(
         ListCategoriesQuery request,
         CancellationToken cancellationToken
     )
@@ -14,4 +14,3 @@ public sealed class ListCategoriesHandler(IReadRepository<CategoryEntity> reposi
         return Result.Success(categories);
     }
 }
-

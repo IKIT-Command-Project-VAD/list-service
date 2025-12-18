@@ -1,4 +1,4 @@
-namespace ShoppingList.List.UseCases.ListItems;
+﻿namespace ShoppingList.List.UseCases.ListItems;
 
 public record UpdateListItemCommand(
     Guid ListId,
@@ -13,7 +13,7 @@ public record UpdateListItemCommand(
     bool IsChecked
 ) : ICommand<Result>;
 
-public sealed class UpdateListItemHandler(IRepository<ListItemEntity> itemRepo)
+public sealed class UpdateListItemHandler(IRepository<ListItem> itemRepo)
     : ICommandHandler<UpdateListItemCommand, Result>
 {
     public async Task<Result> Handle(
@@ -43,4 +43,3 @@ public sealed class UpdateListItemHandler(IRepository<ListItemEntity> itemRepo)
         return Result.Success();
     }
 }
-

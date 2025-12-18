@@ -9,7 +9,7 @@ public record UpdateShareLinkCommand(
     bool IsActive
 ) : ICommand<Result>;
 
-public sealed class UpdateShareLinkHandler(IRepository<ShareLinkEntity> repository)
+public sealed class UpdateShareLinkHandler(IRepository<ShareLink> repository)
     : ICommandHandler<UpdateShareLinkCommand, Result>
 {
     public async Task<Result> Handle(

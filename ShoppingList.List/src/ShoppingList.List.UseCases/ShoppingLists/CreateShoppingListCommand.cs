@@ -1,7 +1,6 @@
-namespace ShoppingList.List.UseCases.ShoppingLists;
+﻿namespace ShoppingList.List.UseCases.ShoppingLists;
 
-public record CreateShoppingListCommand(Guid OwnerId, string Name)
-    : ICommand<Result<Guid>>;
+public record CreateShoppingListCommand(Guid OwnerId, string Name) : ICommand<Result<Guid>>;
 
 public sealed class CreateShoppingListHandler(IRepository<ShoppingListEntity> repository)
     : ICommandHandler<CreateShoppingListCommand, Result<Guid>>
@@ -16,4 +15,3 @@ public sealed class CreateShoppingListHandler(IRepository<ShoppingListEntity> re
         return list.Id;
     }
 }
-

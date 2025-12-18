@@ -1,11 +1,11 @@
-namespace ShoppingList.List.UseCases.Categories;
+﻿namespace ShoppingList.List.UseCases.Categories;
 
-public record GetCategoryQuery(Guid Id) : IQuery<Result<CategoryEntity>>;
+public record GetCategoryQuery(Guid Id) : IQuery<Result<Category>>;
 
-public sealed class GetCategoryHandler(IReadRepository<CategoryEntity> repository)
-    : IQueryHandler<GetCategoryQuery, Result<CategoryEntity>>
+public sealed class GetCategoryHandler(IReadRepository<Category> repository)
+    : IQueryHandler<GetCategoryQuery, Result<Category>>
 {
-    public async Task<Result<CategoryEntity>> Handle(
+    public async Task<Result<Category>> Handle(
         GetCategoryQuery request,
         CancellationToken cancellationToken
     )
@@ -14,4 +14,3 @@ public sealed class GetCategoryHandler(IReadRepository<CategoryEntity> repositor
         return category is null ? Result.NotFound() : Result.Success(category);
     }
 }
-

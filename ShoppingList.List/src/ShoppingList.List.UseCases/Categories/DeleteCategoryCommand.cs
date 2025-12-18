@@ -1,8 +1,8 @@
-namespace ShoppingList.List.UseCases.Categories;
+﻿namespace ShoppingList.List.UseCases.Categories;
 
 public record DeleteCategoryCommand(Guid Id) : ICommand<Result>;
 
-public sealed class DeleteCategoryHandler(IRepository<CategoryEntity> repository)
+public sealed class DeleteCategoryHandler(IRepository<Category> repository)
     : ICommandHandler<DeleteCategoryCommand, Result>
 {
     public async Task<Result> Handle(
@@ -18,4 +18,3 @@ public sealed class DeleteCategoryHandler(IRepository<CategoryEntity> repository
         return Result.Success();
     }
 }
-

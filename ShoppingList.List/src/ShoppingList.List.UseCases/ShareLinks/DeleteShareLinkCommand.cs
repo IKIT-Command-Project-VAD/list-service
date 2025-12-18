@@ -2,7 +2,7 @@ namespace ShoppingList.List.UseCases.ShareLinks;
 
 public record DeleteShareLinkCommand(Guid ListId, Guid ShareId, Guid OwnerId) : ICommand<Result>;
 
-public sealed class DeleteShareLinkHandler(IRepository<ShareLinkEntity> repository)
+public sealed class DeleteShareLinkHandler(IRepository<ShareLink> repository)
     : ICommandHandler<DeleteShareLinkCommand, Result>
 {
     public async Task<Result> Handle(

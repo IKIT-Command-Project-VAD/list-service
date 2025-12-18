@@ -2,7 +2,7 @@ using ShoppingList.List.Core.ShoppingListAggregate.Enums;
 
 namespace ShoppingList.List.Core.ShoppingListAggregate;
 
-public sealed class ShareLink : EntityBase<Guid>
+public sealed class ShareLink : EntityBase<Guid>, IAggregateRoot
 {
     // EF Core
     private ShareLink() { }

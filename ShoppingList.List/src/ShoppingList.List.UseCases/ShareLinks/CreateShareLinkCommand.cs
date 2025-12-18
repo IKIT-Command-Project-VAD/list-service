@@ -1,4 +1,4 @@
-namespace ShoppingList.List.UseCases.ShareLinks;
+﻿namespace ShoppingList.List.UseCases.ShareLinks;
 
 public record CreateShareLinkCommand(
     Guid ListId,
@@ -6,12 +6,12 @@ public record CreateShareLinkCommand(
     Guid CreatedBy,
     SharePermissionType PermissionType,
     DateTimeOffset? ExpiresAt
-) : ICommand<Result<ShareLinkEntity>>;
+) : ICommand<Result<ShareLink>>;
 
-public sealed class CreateShareLinkHandler(IRepository<ShareLinkEntity> shareRepo, IRepository<ShoppingListEntity> listRepo)
-    : ICommandHandler<CreateShareLinkCommand, Result<ShareLinkEntity>>
+public sealed class CreateShareLinkHandler(IRepository<ShoppingListEntity> listRepo)
+    : ICommandHandler<CreateShareLinkCommand, Result<ShareLink>>
 {
-    public async Task<Result<ShareLinkEntity>> Handle(
+    public async Task<Result<ShareLink>> Handle(
         CreateShareLinkCommand request,
         CancellationToken cancellationToken
     )
@@ -25,4 +25,3 @@ public sealed class CreateShareLinkHandler(IRepository<ShareLinkEntity> shareRep
         return Result.Success(link);
     }
 }
-

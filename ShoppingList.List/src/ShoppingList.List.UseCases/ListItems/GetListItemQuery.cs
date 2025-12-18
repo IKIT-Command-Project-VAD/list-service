@@ -1,13 +1,13 @@
-namespace ShoppingList.List.UseCases.ListItems;
+﻿namespace ShoppingList.List.UseCases.ListItems;
 
-public record GetListItemQuery(Guid ListId, Guid ItemId, Guid OwnerId) : IQuery<Result<ListItemEntity>>;
+public record GetListItemQuery(Guid ListId, Guid ItemId, Guid OwnerId) : IQuery<Result<ListItem>>;
 
 public sealed class GetListItemHandler(
-    IReadRepository<ListItemEntity> repository,
+    IReadRepository<ListItem> repository,
     IReadRepository<ShoppingListEntity> listRepo
-) : IQueryHandler<GetListItemQuery, Result<ListItemEntity>>
+) : IQueryHandler<GetListItemQuery, Result<ListItem>>
 {
-    public async Task<Result<ListItemEntity>> Handle(
+    public async Task<Result<ListItem>> Handle(
         GetListItemQuery request,
         CancellationToken cancellationToken
     )
@@ -21,4 +21,3 @@ public sealed class GetListItemHandler(
         return item is null ? Result.NotFound() : Result.Success(item);
     }
 }
-

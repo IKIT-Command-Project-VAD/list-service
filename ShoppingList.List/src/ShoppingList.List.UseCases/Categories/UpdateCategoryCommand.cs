@@ -1,8 +1,8 @@
-namespace ShoppingList.List.UseCases.Categories;
+﻿namespace ShoppingList.List.UseCases.Categories;
 
 public record UpdateCategoryCommand(Guid Id, string Name, string? Icon) : ICommand<Result>;
 
-public sealed class UpdateCategoryHandler(IRepository<CategoryEntity> repository)
+public sealed class UpdateCategoryHandler(IRepository<Category> repository)
     : ICommandHandler<UpdateCategoryCommand, Result>
 {
     public async Task<Result> Handle(
@@ -19,4 +19,3 @@ public sealed class UpdateCategoryHandler(IRepository<CategoryEntity> repository
         return Result.Success();
     }
 }
-

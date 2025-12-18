@@ -1,6 +1,6 @@
 namespace ShoppingList.List.Core.ShoppingListAggregate.Specifications;
 
-public sealed class ListItemByListIdSpec : Specification<ListItemEntity>
+public sealed class ListItemByListIdSpec : Specification<ListItem>
 {
     public ListItemByListIdSpec(Guid listId)
     {

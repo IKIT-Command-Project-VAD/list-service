@@ -1,4 +1,4 @@
-namespace ShoppingList.List.UseCases.ListItems;
+﻿namespace ShoppingList.List.UseCases.ListItems;
 
 public record CreateListItemCommand(
     Guid ListId,
@@ -10,21 +10,21 @@ public record CreateListItemCommand(
     decimal? Price,
     string? Currency,
     bool IsChecked
-) : ICommand<Result<ListItemEntity>>;
+) : ICommand<Result<ListItem>>;
 
 public sealed class CreateListItemHandler(
-    IRepository<ListItemEntity> itemRepo,
-    IRepository<ShoppingListEntity> listRepo
-)
-    : ICommandHandler<CreateListItemCommand, Result<ListItemEntity>>
+    IRepository<ShoppingListEntity> listRepo,
+    IRepository<ListItem> itemRepo
+) : ICommandHandler<CreateListItemCommand, Result<ListItem>>
 {
-    public async Task<Result<ListItemEntity>> Handle(
+    public async Task<Result<ListItem>> Handle(
         CreateListItemCommand request,
         CancellationToken cancellationToken
     )
     {
-        var list = await listRepo.GetByIdAsync(request.ListId, cancellationToken);
-        if (list is null || list.OwnerId != request.OwnerId)
+        var spec = new ShoppingListByIdWithDetailsSpec(request.ListId, request.OwnerId);
+        var list = await listRepo.FirstOrDefaultAsync(spec, cancellationToken);
+        if (list is null)
             return Result.NotFound();
 
         var item = list.AddItem(
@@ -37,8 +37,11 @@ public sealed class CreateListItemHandler(
             request.IsChecked
         );
 
+        // Persist the new item separately to avoid treating it as Modified
+        await itemRepo.AddAsync(item, cancellationToken);
+
+        // Persist list metadata updates (UpdatedAt/Version)
         await listRepo.UpdateAsync(list, cancellationToken);
         return Result.Success(item);
     }
 }
-
