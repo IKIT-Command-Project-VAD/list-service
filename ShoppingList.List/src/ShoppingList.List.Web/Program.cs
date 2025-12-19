@@ -17,6 +17,14 @@ var appLogger = new SerilogLoggerFactory(logger).CreateLogger<Program>();
 builder.Services.AddOptionConfigs(builder.Configuration, appLogger, builder);
 builder.Services.AddServiceConfigs(appLogger, builder);
 
+var supportedCultures = new[] { "en", "ru" };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture("en");
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+});
+
 builder
     .Services.AddFastEndpoints()
     .SwaggerDocument(o =>
@@ -33,6 +41,7 @@ builder
 
 var app = builder.Build();
 
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 
