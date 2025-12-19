@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.Globalization;
+using System.Security.Claims;
 using Ardalis.GuardClauses;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using ShoppingList.List.Core.Interfaces;
@@ -16,6 +18,9 @@ public static class ServiceConfigs
         WebApplicationBuilder builder
     )
     {
+        ValidatorOptions.Global.LanguageManager.Enabled = false; // force default (English) messages
+        ValidatorOptions.Global.LanguageManager.Culture = CultureInfo.GetCultureInfo("en");
+
         services.AddInfrastructureServices(builder.Configuration, logger).AddMediatrConfigs();
 
         if (builder.Environment.IsDevelopment())
