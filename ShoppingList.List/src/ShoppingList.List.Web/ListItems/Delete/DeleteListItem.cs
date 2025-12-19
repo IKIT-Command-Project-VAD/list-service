@@ -1,6 +1,6 @@
-using ShoppingList.List.UseCases.ListItems;
+﻿using ShoppingList.List.UseCases.ListItems;
 
-namespace ShoppingList.List.Web.ListItems;
+namespace ShoppingList.List.Web.ListItems.Delete;
 
 public class DeleteListItem(IMediator mediator) : Endpoint<DeleteListItemRequest>
 {
@@ -19,7 +19,10 @@ public class DeleteListItem(IMediator mediator) : Endpoint<DeleteListItemRequest
             return;
         }
 
-        var result = await mediator.Send(new DeleteListItemCommand(req.ListId, ownerId.Value, req.ItemId), ct);
+        var result = await mediator.Send(
+            new DeleteListItemCommand(req.ListId, ownerId.Value, req.ItemId),
+            ct
+        );
         if (result.Status == ResultStatus.NotFound)
         {
             await SendNotFoundAsync(ct);
@@ -29,10 +32,3 @@ public class DeleteListItem(IMediator mediator) : Endpoint<DeleteListItemRequest
         await SendNoContentAsync(ct);
     }
 }
-
-public record DeleteListItemRequest
-{
-    public Guid ListId { get; init; }
-    public Guid ItemId { get; init; }
-}
-

@@ -1,4 +1,4 @@
-﻿namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists.Delete;
 
 public class DeleteShoppingList(IMediator mediator) : Endpoint<DeleteShoppingListRequest>
 {
@@ -31,9 +31,4 @@ public class DeleteShoppingList(IMediator mediator) : Endpoint<DeleteShoppingLis
 
         await SendNoContentAsync(ct);
     }
-}
-
-public record DeleteShoppingListRequest
-{
-    public Guid Id { get; init; }
 }

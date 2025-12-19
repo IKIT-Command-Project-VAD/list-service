@@ -1,4 +1,4 @@
-﻿namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists.Create;
 
 public class CreateShoppingList(IMediator mediator)
     : Endpoint<CreateShoppingListRequest, ShoppingListRecord>
@@ -40,9 +40,4 @@ public class CreateShoppingList(IMediator mediator)
 
         Response = getResult.Value.ToRecord();
     }
-}
-
-public record CreateShoppingListRequest
-{
-    public string Name { get; init; } = string.Empty;
 }

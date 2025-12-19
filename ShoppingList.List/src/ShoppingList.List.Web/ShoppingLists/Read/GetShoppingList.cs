@@ -1,4 +1,4 @@
-﻿namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists.Read;
 
 public class GetShoppingList(IMediator mediator)
     : Endpoint<GetShoppingListRequest, ShoppingListRecord>
@@ -27,9 +27,4 @@ public class GetShoppingList(IMediator mediator)
 
         Response = result.Value.ToRecord();
     }
-}
-
-public record GetShoppingListRequest
-{
-    public Guid Id { get; init; }
 }

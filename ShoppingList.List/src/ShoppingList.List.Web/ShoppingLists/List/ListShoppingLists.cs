@@ -1,4 +1,4 @@
-﻿namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists.List;
 
 public class ListShoppingLists(IMediator mediator)
     : EndpointWithoutRequest<List<ShoppingListRecord>>

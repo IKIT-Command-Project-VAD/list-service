@@ -1,4 +1,4 @@
-﻿namespace ShoppingList.List.Web.ShoppingLists;
+﻿namespace ShoppingList.List.Web.ShoppingLists.Update;
 
 public class UpdateShoppingList(IMediator mediator)
     : Endpoint<UpdateShoppingListRequest, ShoppingListRecord>
@@ -42,10 +42,4 @@ public class UpdateShoppingList(IMediator mediator)
 
         Response = getResult.Value.ToRecord();
     }
-}
-
-public record UpdateShoppingListRequest
-{
-    public Guid Id { get; init; }
-    public string Name { get; init; } = string.Empty;
 }

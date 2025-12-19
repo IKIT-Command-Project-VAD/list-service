@@ -1,10 +1,9 @@
-using ShoppingList.List.UseCases.ListItems;
+﻿using ShoppingList.List.UseCases.ListItems;
 using ShoppingList.List.Web.ShoppingLists;
 
-namespace ShoppingList.List.Web.ListItems;
+namespace ShoppingList.List.Web.ListItems.Create;
 
-public class CreateListItem(IMediator mediator)
-    : Endpoint<CreateListItemRequest, ListItemRecord>
+public class CreateListItem(IMediator mediator) : Endpoint<CreateListItemRequest, ListItemRecord>
 {
     public override void Configure()
     {
@@ -50,16 +49,3 @@ public class CreateListItem(IMediator mediator)
         Response = getResult.Value.ToRecord();
     }
 }
-
-public record CreateListItemRequest
-{
-    public Guid ListId { get; init; }
-    public string Name { get; init; } = string.Empty;
-    public decimal Quantity { get; init; }
-    public string? Unit { get; init; }
-    public Guid? CategoryId { get; init; }
-    public decimal? Price { get; init; }
-    public string? Currency { get; init; }
-    public bool IsChecked { get; init; }
-}
-

@@ -1,7 +1,7 @@
-using ShoppingList.List.UseCases.ListItems;
+﻿using ShoppingList.List.UseCases.ListItems;
 using ShoppingList.List.Web.ShoppingLists;
 
-namespace ShoppingList.List.Web.ListItems;
+namespace ShoppingList.List.Web.ListItems.Read;
 
 public class GetListItem(IMediator mediator) : Endpoint<GetListItemRequest, ListItemRecord>
 {
@@ -33,10 +33,3 @@ public class GetListItem(IMediator mediator) : Endpoint<GetListItemRequest, List
         Response = result.Value.ToRecord();
     }
 }
-
-public record GetListItemRequest
-{
-    public Guid ListId { get; init; }
-    public Guid ItemId { get; init; }
-}
-
