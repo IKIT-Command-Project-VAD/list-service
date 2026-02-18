@@ -1,4 +1,4 @@
-using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+﻿using ShoppingList.List.Core.ShoppingListAggregate.Enums;
 
 namespace ShoppingList.List.Core.ShoppingListAggregate;
 
@@ -95,4 +95,3 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
         Version++;
     }
 }
-

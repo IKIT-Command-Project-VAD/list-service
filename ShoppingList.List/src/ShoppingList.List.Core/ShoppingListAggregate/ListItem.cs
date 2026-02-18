@@ -23,7 +23,7 @@ public sealed class ListItem : EntityBase<Guid>, IAggregateRoot
     // EF Core
     private ListItem() { }
 
-    internal static ListItem Create(
+    public static ListItem Create(
         Guid listId,
         string name,
         decimal quantity,
