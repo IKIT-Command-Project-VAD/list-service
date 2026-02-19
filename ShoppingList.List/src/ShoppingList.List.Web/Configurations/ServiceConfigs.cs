@@ -48,6 +48,7 @@ public static class ServiceConfigs
         var authSection = configuration.GetSection("Authentication");
         var authority = Guard.Against.Null(authSection.GetValue<string>("Authority"));
         var requireHttps = Guard.Against.Null(authSection.GetValue<bool>("RequireHttps"));
+        var metadataAddress = Guard.Against.Null(authSection.GetValue<string>("MetadataAddress"));
 
         // Audience validation - set to your API client_id in Keycloak
         var validAudience = authSection.GetValue<string>("Audience");
@@ -60,6 +61,7 @@ public static class ServiceConfigs
             {
                 options.Authority = authority;
                 options.RequireHttpsMetadata = requireHttps;
+                options.MetadataAddress = metadataAddress;
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
