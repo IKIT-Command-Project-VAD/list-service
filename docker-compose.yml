@@ -1,0 +1,18 @@
+services:
+  list-db:
+    image: postgres:16
+    container_name: sl-list-db
+    restart: unless-stopped
+  
+  shoppinglist.list.web:
+    image: ${DOCKER_REGISTRY-}shoppinglist-list-web
+    container_name: sl-list-web
+    build:
+      args:
+        BUILD_CONFIGURATION: Debug
+      context: .
+      dockerfile: ShoppingList.List/src/ShoppingList.List.Web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      list-db:
+        condition: service_healthy

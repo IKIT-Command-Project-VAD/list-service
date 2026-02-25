@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36705.20 d17.14
+VisualStudioVersion = 17.14.36705.20
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingList.List.Core", "ShoppingList.List\src\ShoppingList.List.Core\ShoppingList.List.Core.csproj", "{44830034-9D6D-4571-A512-68BC65A45960}"
 EndProject
@@ -16,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingList.List.IntegrationTests", "ShoppingList.List\tests\ShoppingList.List.IntegrationTests\ShoppingList.List.IntegrationTests.csproj", "{5D9BA194-F536-4CF3-8066-936A80DA9C5C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingList.List.UnitTests", "ShoppingList.List\tests\ShoppingList.List.UnitTests\ShoppingList.List.UnitTests.csproj", "{496B9C38-48B1-4063-8681-D537FDAE9FCE}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +52,10 @@ Global
 		{496B9C38-48B1-4063-8681-D537FDAE9FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{496B9C38-48B1-4063-8681-D537FDAE9FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{496B9C38-48B1-4063-8681-D537FDAE9FCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

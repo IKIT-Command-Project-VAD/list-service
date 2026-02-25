@@ -1,0 +1,39 @@
+services:
+  list-db:
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - shoppinglist-list_pgdata:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT_EXTERNAL}:${POSTGRES_PORT_INTERNAL}"
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  
+  shoppinglist.list.web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "8080"
+    volumes:
+      - ${USER_SECRETS_DIR}:/home/app/.microsoft/usersecrets:ro
+      - ${USER_SECRETS_DIR}:/root/.microsoft/usersecrets:ro
+      - ${HTTPS_CERTS_DIR}:/home/app/.aspnet/https:ro
+      - ${HTTPS_CERTS_DIR}:/root/.aspnet/https:ro
+    networks:
+      - default
+      - shopping_list_network
+
+volumes:
+  shoppinglist-list_pgdata:
+
+networks:
+  shopping_list_network:
+    external: true

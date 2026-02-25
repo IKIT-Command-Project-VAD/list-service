@@ -6,6 +6,9 @@
         <WebProjectMode>true</WebProjectMode>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
       <UserSecretsId>196f1793-1411-4f2b-a4cc-454ea0d09430</UserSecretsId>
+      <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+      <DockerfileContext>..\..\..</DockerfileContext>
+      <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Ardalis.ListStartupServices" />
@@ -19,6 +22,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
         <PackageReference Include="Serilog.AspNetCore" />
     </ItemGroup>
     <ItemGroup>

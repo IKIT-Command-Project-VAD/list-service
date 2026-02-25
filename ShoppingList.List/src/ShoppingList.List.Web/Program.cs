@@ -3,10 +3,7 @@ using ShoppingList.List.Web.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var logger = Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
+var logger = Log.Logger = new LoggerConfiguration().Enrich.FromLogContext().CreateLogger();
 
 logger.Information("Starting web host");
 
@@ -46,6 +43,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 await app.UseAppMiddlewareAndSeedDatabase();
+
+app.MapHealthChecks("/healthz");
 
 await app.RunAsync();
 
