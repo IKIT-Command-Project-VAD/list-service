@@ -1,19 +1,49 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ShoppingList.List.Infrastructure.Data;
+using System.Collections.Generic;
 
 namespace ShoppingList.List.FunctionalTests;
 
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
     where TProgram : class
 {
-    /// <summary>
-    /// Overriding CreateHost to avoid creating a separate ServiceProvider per this thread:
-    /// https://github.com/dotnet-architecture/eShopOnWeb/issues/465
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    public CustomWebApplicationFactory()
+    {
+        // Set environment variables BEFORE the host is built
+        Environment.SetEnvironmentVariable("DatabaseProvider", "Sqlite");
+        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", $"Data Source={Guid.NewGuid()}.sqlite");
+        
+        // Mock Auth settings to bypass Guards
+        Environment.SetEnvironmentVariable("Authentication__Authority", "http://localhost:8080");
+        Environment.SetEnvironmentVariable("Authentication__RequireHttps", "false");
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.UseEnvironment("Development");
+
+        builder.ConfigureTestServices(services =>
+        {
+            // Replace Authentication with TestAuthHandler
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Test";
+                options.DefaultChallengeScheme = "Test";
+            })
+            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+        });
+    }
+
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        builder.UseEnvironment("Development"); // will not send real emails
         var host = builder.Build();
         host.Start();
 
@@ -31,21 +61,13 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
                 ILogger<CustomWebApplicationFactory<TProgram>>
             >();
 
-            // Reset Sqlite database for each test run
-            // If using a real database, you'll likely want to remove this step.
-            db.Database.EnsureDeleted();
-
             // Ensure the database is created.
             db.Database.EnsureCreated();
 
             try
             {
-                // Can also skip creating the items
-                //if (!db.ToDoItems.Any())
-                //{
                 // Seed the database with test data.
-                SeedData.PopulateTestDataAsync(db).Wait();
-                //}
+                SeedData.InitializeAsync(db).Wait();
             }
             catch (Exception ex)
             {
@@ -59,32 +81,5 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
         }
 
         return host;
-    }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.ConfigureServices(services =>
-        {
-            // Configure test dependencies here
-
-            //// Remove the app's ApplicationDbContext registration.
-            //var descriptor = services.SingleOrDefault(
-            //d => d.ServiceType ==
-            //    typeof(DbContextOptions<AppDbContext>));
-
-            //if (descriptor != null)
-            //{
-            //  services.Remove(descriptor);
-            //}
-
-            //// This should be set for each individual test run
-            //string inMemoryCollectionName = Guid.NewGuid().ToString();
-
-            //// Add ApplicationDbContext using an in-memory database for testing.
-            //services.AddDbContext<AppDbContext>(options =>
-            //{
-            //  options.UseInMemoryDatabase(inMemoryCollectionName);
-            //});
-        });
     }
 }

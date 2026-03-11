@@ -6,6 +6,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
 {
     private readonly List<ListItem> _items = new();
     private readonly List<ShareLink> _shareLinks = new();
+    private readonly List<ListMember> _members = new();
 
     public Guid OwnerId { get; private set; }
     public string Name { get; private set; } = default!;
@@ -16,6 +17,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
 
     public IReadOnlyCollection<ListItem> Items => _items.AsReadOnly();
     public IReadOnlyCollection<ShareLink> ShareLinks => _shareLinks.AsReadOnly();
+    public IReadOnlyCollection<ListMember> Members => _members.AsReadOnly();
 
     // EF Core
     private ShoppingList() { }
@@ -87,6 +89,20 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
         _shareLinks.Add(link);
         Touch();
         return link;
+    }
+
+    public ListMember AddMember(Guid userId, SharePermissionType permissionType)
+    {
+        var existing = _members.FirstOrDefault(m => m.UserId == userId);
+        if (existing != null)
+        {
+            return existing;
+        }
+
+        var member = ListMember.Create(Id, userId, permissionType);
+        _members.Add(member);
+        Touch();
+        return member;
     }
 
     internal void Touch()

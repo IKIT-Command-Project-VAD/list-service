@@ -1,5 +1,6 @@
 ﻿using ShoppingList.List.Core.ContributorAggregate;
 using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ShoppingList.List.Infrastructure.Data;
 
@@ -15,6 +16,7 @@ public class AppDbContext(
     public DbSet<ListItemEntity> ListItems => Set<ListItemEntity>();
     public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
     public DbSet<ShareLinkEntity> ShareLinks => Set<ShareLinkEntity>();
+    public DbSet<ListMemberEntity> ListMembers => Set<ListMemberEntity>();
     public DbSet<ListChangeEntity> ListChanges => Set<ListChangeEntity>();
     public DbSet<BatchOperationEntity> BatchOperations => Set<BatchOperationEntity>();
 
@@ -22,16 +24,12 @@ public class AppDbContext(
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder
-            .HasPostgresEnum<ChangeType>(schema: null, name: "change_type")
-            .HasPostgresEnum<SharePermissionType>(schema: null, name: "share_permission_type")
-            .HasPostgresEnum<BatchStatus>(schema: null, name: "batch_status");
-
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         modelBuilder.Entity<ShoppingListEntity>().HasQueryFilter(x => !x.IsDeleted);
         modelBuilder.Entity<ListItemEntity>().HasQueryFilter(x => !x.IsDeleted);
         modelBuilder.Entity<ShareLinkEntity>().HasQueryFilter(x => !x.List!.IsDeleted);
+        modelBuilder.Entity<ListMemberEntity>().HasQueryFilter(x => !x.List!.IsDeleted);
         modelBuilder.Entity<ListChangeEntity>().HasQueryFilter(x => !x.List!.IsDeleted);
         modelBuilder.Entity<BatchOperationEntity>().HasQueryFilter(x => !x.List!.IsDeleted);
     }

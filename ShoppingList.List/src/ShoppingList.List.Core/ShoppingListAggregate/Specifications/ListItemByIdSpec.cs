@@ -10,7 +10,8 @@ public sealed class ListItemByIdSpec
             .AsTracking()
             .Where(x => x.ListId == listId && x.Id == itemId)
             .Include(x => x.Category)
-            .Include(x => x.List);
+            .Include(x => x.List)
+            .ThenInclude(l => l!.Members);
     }
 }
 

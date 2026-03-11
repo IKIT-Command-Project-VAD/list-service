@@ -15,6 +15,9 @@ public sealed class DeleteShoppingListHandler(IRepository<ShoppingListEntity> re
         if (list is null)
             return Result.NotFound();
 
+        if (list.OwnerId != request.OwnerId)
+            return Result.Forbidden();
+
         list.SoftDelete();
         await repository.UpdateAsync(list, cancellationToken);
         return Result.Success();

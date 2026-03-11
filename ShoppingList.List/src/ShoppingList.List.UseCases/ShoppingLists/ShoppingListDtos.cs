@@ -9,7 +9,15 @@ public record ShoppingListRecord(
     DateTimeOffset UpdatedAt,
     bool IsDeleted,
     List<ListItemRecord> Items,
-    List<ShareLinkRecord> ShareLinks
+    List<ShareLinkRecord> ShareLinks,
+    List<ListMemberRecord> Members
+);
+
+public record ListMemberRecord(
+    Guid Id,
+    Guid UserId,
+    SharePermissionType PermissionType,
+    DateTimeOffset JoinedAt
 );
 
 public record ListItemRecord(

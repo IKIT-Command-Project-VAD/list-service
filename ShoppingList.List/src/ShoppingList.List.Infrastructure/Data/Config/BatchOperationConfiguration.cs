@@ -13,7 +13,7 @@ public class BatchOperationConfiguration : IEntityTypeConfiguration<BatchOperati
         builder.Property(x => x.Id).HasColumnName("batch_id").HasColumnType("uuid");
         builder.Property(x => x.ListId).HasColumnName("list_id").HasColumnType("uuid");
         builder.Property(x => x.UserId).HasColumnName("user_id").HasColumnType("uuid");
-        builder.Property(x => x.Status).HasColumnName("status").HasColumnType("batch_status");
+        builder.Property(x => x.Status).HasColumnName("status");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasColumnType("timestamptz");
         builder
             .Property(x => x.CompletedAt)

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -11,12 +11,6 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder
-                .AlterDatabase()
-                .Annotation("Npgsql:Enum:batch_status", "pending,processing,completed,failed")
-                .Annotation("Npgsql:Enum:change_type", "create,update,delete")
-                .Annotation("Npgsql:Enum:share_permission_type", "read,write");
-
             migrationBuilder.CreateTable(
                 name: "categories",
                 columns: table => new
@@ -91,7 +85,7 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
                     list_id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     operations = table.Column<string>(type: "jsonb", nullable: false),
-                    status = table.Column<int>(type: "batch_status", nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     completed_at = table.Column<DateTimeOffset>(
                         type: "timestamptz",
@@ -119,7 +113,7 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
                     change_id = table.Column<Guid>(type: "uuid", nullable: false),
                     list_id = table.Column<Guid>(type: "uuid", nullable: false),
                     item_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    change_type = table.Column<int>(type: "change_type", nullable: false),
+                    change_type = table.Column<int>(type: "integer", nullable: false),
                     field_name = table.Column<string>(
                         type: "character varying(100)",
                         maxLength: 100,
@@ -194,6 +188,28 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
             );
 
             migrationBuilder.CreateTable(
+                name: "list_members",
+                columns: table => new
+                {
+                    member_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    list_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    permission_type = table.Column<int>(type: "integer", nullable: false),
+                    joined_at = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_list_members", x => x.member_id);
+                    table.ForeignKey(
+                        name: "FK_list_members_shopping_lists_list_id",
+                        column: x => x.list_id,
+                        principalTable: "shopping_lists",
+                        principalColumn: "list_id",
+                        onDelete: ReferentialAction.Cascade);
+                }
+            );
+
+            migrationBuilder.CreateTable(
                 name: "share_links",
                 columns: table => new
                 {
@@ -205,7 +221,7 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
                         nullable: false
                     ),
                     share_permission_type = table.Column<int>(
-                        type: "share_permission_type",
+                        type: "integer",
                         nullable: false
                     ),
                     created_by = table.Column<Guid>(type: "uuid", nullable: false),
@@ -251,6 +267,12 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
             );
 
             migrationBuilder.CreateIndex(
+                name: "IX_list_members_list_id",
+                table: "list_members",
+                column: "list_id"
+            );
+
+            migrationBuilder.CreateIndex(
                 name: "IX_share_links_list_id",
                 table: "share_links",
                 column: "list_id"
@@ -267,6 +289,8 @@ namespace ShoppingList.List.Infrastructure.Data.Migrations
             migrationBuilder.DropTable(name: "list_changes");
 
             migrationBuilder.DropTable(name: "list_items");
+
+            migrationBuilder.DropTable(name: "list_members");
 
             migrationBuilder.DropTable(name: "share_links");
 

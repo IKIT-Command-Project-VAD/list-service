@@ -8,6 +8,7 @@ global using Serilog.Extensions.Logging;
 global using ShoppingList.List.UseCases.ShoppingLists;
 global using ShoppingList.List.Web.Extensions;
 global using CategoryEntity = ShoppingList.List.Core.ShoppingListAggregate.Category;
+global using ListMemberEntity = ShoppingList.List.Core.ShoppingListAggregate.ListMember;
 global using ListItemEntity = ShoppingList.List.Core.ShoppingListAggregate.ListItem;
 global using ShareLinkEntity = ShoppingList.List.Core.ShoppingListAggregate.ShareLink;
 global using ShoppingListEntity = ShoppingList.List.Core.ShoppingListAggregate.ShoppingList;

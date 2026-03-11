@@ -14,8 +14,7 @@ public class ListChangeConfiguration : IEntityTypeConfiguration<ListChange>
         builder.Property(x => x.ItemId).HasColumnName("item_id").HasColumnType("uuid");
         builder
             .Property(x => x.ChangeType)
-            .HasColumnName("change_type")
-            .HasColumnType("change_type");
+            .HasColumnName("change_type");
         builder.Property(x => x.FieldName).HasColumnName("field_name").HasMaxLength(100);
         builder.Property(x => x.OldValue).HasColumnName("old_value");
         builder.Property(x => x.NewValue).HasColumnName("new_value");

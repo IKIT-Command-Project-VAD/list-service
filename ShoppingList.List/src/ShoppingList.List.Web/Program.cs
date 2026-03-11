@@ -1,5 +1,7 @@
 ﻿using ShoppingList.List.UseCases.Contributors.Create;
 using ShoppingList.List.Web.Configurations;
+using ShoppingList.List.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,18 @@ builder
 //builder.Services.AddTransient<ICommandHandler<CreateContributorCommand2,Result<int>>, CreateContributorCommandHandler2>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    if (context.Database.IsRelational())
+    {
+        // For Npgsql, we need to ensure the connection is open or the dataSource is used
+        // context.Database.MigrateAsync() uses the registered options.
+        await context.Database.MigrateAsync();
+    }
+}
 
 app.UseRequestLocalization();
 app.UseAuthentication();

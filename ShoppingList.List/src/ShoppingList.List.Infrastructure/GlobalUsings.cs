@@ -13,6 +13,7 @@ global using MimeKit;
 global using BatchOperationEntity = ShoppingList.List.Core.ShoppingListAggregate.BatchOperation;
 global using CategoryEntity = ShoppingList.List.Core.ShoppingListAggregate.Category;
 global using ListChangeEntity = ShoppingList.List.Core.ShoppingListAggregate.ListChange;
+global using ListMemberEntity = ShoppingList.List.Core.ShoppingListAggregate.ListMember;
 global using ListItemEntity = ShoppingList.List.Core.ShoppingListAggregate.ListItem;
 global using ShareLinkEntity = ShoppingList.List.Core.ShoppingListAggregate.ShareLink;
 global using ShoppingListEntity = ShoppingList.List.Core.ShoppingListAggregate.ShoppingList;

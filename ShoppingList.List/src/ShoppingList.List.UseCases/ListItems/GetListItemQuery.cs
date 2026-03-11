@@ -12,12 +12,13 @@ public sealed class GetListItemHandler(
         CancellationToken cancellationToken
     )
     {
-        var list = await listRepo.GetByIdAsync(request.ListId, cancellationToken);
-        if (list is null || list.OwnerId != request.OwnerId)
+        var spec = new ShoppingListByIdWithDetailsSpec(request.ListId, request.OwnerId);
+        var list = await listRepo.FirstOrDefaultAsync(spec, cancellationToken);
+        if (list is null)
             return Result.NotFound();
 
-        var spec = new ListItemByIdSpec(request.ListId, request.ItemId);
-        var item = await repository.FirstOrDefaultAsync(spec, cancellationToken);
+        var itemSpec = new ListItemByIdSpec(request.ListId, request.ItemId);
+        var item = await repository.FirstOrDefaultAsync(itemSpec, cancellationToken);
         return item is null ? Result.NotFound() : Result.Success(item);
     }
 }

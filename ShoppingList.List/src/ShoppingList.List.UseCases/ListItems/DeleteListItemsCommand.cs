@@ -21,7 +21,7 @@ public sealed class DeleteListItemsHandler(
         {
             var spec = new ListItemByIdSpec(request.ListId, itemId);
             var item = await itemRepo.FirstOrDefaultAsync(spec, cancellationToken);
-            if (item is null)
+            if (item is null || item.List is null)
             {
                 logger.LogWarning(
                     "Item with ID {ItemId} not found in list {ListId}, skipping",
@@ -31,12 +31,16 @@ public sealed class DeleteListItemsHandler(
                 continue;
             }
 
-            if (item.List?.OwnerId != request.OwnerId)
+            bool isOwner = item.List.OwnerId == request.OwnerId;
+            bool isMemberWithWrite = item.List.Members.Any(m => m.UserId == request.OwnerId && m.PermissionType == SharePermissionType.Write);
+
+            if (!isOwner && !isMemberWithWrite)
             {
                 logger.LogWarning(
-                    "Item with ID {ItemId} does not belong to owner {OwnerId}, skipping",
+                    "User {UserId} does not have permission to delete item {ItemId} in list {ListId}, skipping",
+                    request.OwnerId,
                     itemId,
-                    request.OwnerId
+                    request.ListId
                 );
                 continue;
             }

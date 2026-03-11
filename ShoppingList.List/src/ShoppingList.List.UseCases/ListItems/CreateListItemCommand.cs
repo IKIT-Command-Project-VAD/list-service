@@ -27,6 +27,12 @@ public sealed class CreateListItemHandler(
         if (list is null)
             return Result.NotFound();
 
+        bool isOwner = list.OwnerId == request.OwnerId;
+        bool isMemberWithWrite = list.Members.Any(m => m.UserId == request.OwnerId && m.PermissionType == SharePermissionType.Write);
+
+        if (!isOwner && !isMemberWithWrite)
+            return Result.Forbidden();
+
         var item = list.AddItem(
             request.Name,
             request.Quantity,

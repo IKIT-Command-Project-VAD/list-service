@@ -12,7 +12,16 @@ internal static class ShoppingListMapping
             list.UpdatedAt,
             list.IsDeleted,
             list.Items.Select(i => i.ToRecord()).ToList(),
-            list.ShareLinks.Select(s => s.ToRecord()).ToList()
+            list.ShareLinks.Select(s => s.ToRecord()).ToList(),
+            list.Members.Select(m => m.ToRecord()).ToList()
+        );
+
+    public static ListMemberRecord ToRecord(this ListMemberEntity member) =>
+        new(
+            member.Id,
+            member.UserId,
+            member.PermissionType,
+            member.JoinedAt
         );
 
     public static ListItemRecord ToRecord(this ListItemEntity item) =>

@@ -18,8 +18,7 @@ public class ShareLinkConfiguration : IEntityTypeConfiguration<ShareLink>
             .IsRequired();
         builder
             .Property(x => x.PermissionType)
-            .HasColumnName("share_permission_type")
-            .HasColumnType("share_permission_type");
+            .HasColumnName("share_permission_type");
         builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("uuid");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasColumnType("timestamptz");
         builder.Property(x => x.ExpiresAt).HasColumnName("expires_at").HasColumnType("timestamptz");
