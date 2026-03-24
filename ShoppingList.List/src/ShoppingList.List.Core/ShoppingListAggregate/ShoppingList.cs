@@ -1,4 +1,4 @@
-﻿using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+using ShoppingList.List.Core.ShoppingListAggregate.Enums;
 
 namespace ShoppingList.List.Core.ShoppingListAggregate;
 
@@ -96,6 +96,11 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
         var existing = _members.FirstOrDefault(m => m.UserId == userId);
         if (existing != null)
         {
+            if (existing.UpgradePermission(permissionType))
+            {
+                Touch();
+            }
+
             return existing;
         }
 

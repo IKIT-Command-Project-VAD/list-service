@@ -33,4 +33,15 @@ public sealed class ListMember : EntityBase<Guid>, IAggregateRoot
             JoinedAt = DateTimeOffset.UtcNow,
         };
     }
+
+    public bool UpgradePermission(SharePermissionType permissionType)
+    {
+        if (permissionType <= PermissionType)
+        {
+            return false;
+        }
+
+        PermissionType = permissionType;
+        return true;
+    }
 }

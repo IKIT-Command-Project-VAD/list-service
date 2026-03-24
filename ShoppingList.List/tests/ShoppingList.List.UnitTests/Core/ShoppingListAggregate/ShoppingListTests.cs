@@ -1,4 +1,4 @@
-﻿using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+using ShoppingList.List.Core.ShoppingListAggregate.Enums;
 using SL = ShoppingList.List.Core.ShoppingListAggregate.ShoppingList;
 
 namespace ShoppingList.List.UnitTests.Core.ShoppingListAggregate;
@@ -233,5 +233,43 @@ public class ShoppingListTests
 
         // Assert
         Assert.Null(addedLink.ExpiresAt);
+    }
+
+    [Fact]
+    public void AddMember_ExistingReadMember_UpgradesToWriteAndTouches()
+    {
+        // Arrange
+        var shoppingList = SL.Create(Guid.NewGuid(), "Name");
+        var userId = Guid.NewGuid();
+        shoppingList.AddMember(userId, SharePermissionType.Read);
+        var originalUpdatedAt = shoppingList.UpdatedAt;
+        var originalVersion = shoppingList.Version;
+
+        // Act
+        var member = shoppingList.AddMember(userId, SharePermissionType.Write);
+
+        // Assert
+        Assert.Equal(SharePermissionType.Write, member.PermissionType);
+        Assert.True(shoppingList.UpdatedAt > originalUpdatedAt);
+        Assert.Equal(originalVersion + 1, shoppingList.Version);
+    }
+
+    [Fact]
+    public void AddMember_ExistingWriteMember_DoesNotDowngradeToRead()
+    {
+        // Arrange
+        var shoppingList = SL.Create(Guid.NewGuid(), "Name");
+        var userId = Guid.NewGuid();
+        shoppingList.AddMember(userId, SharePermissionType.Write);
+        var originalUpdatedAt = shoppingList.UpdatedAt;
+        var originalVersion = shoppingList.Version;
+
+        // Act
+        var member = shoppingList.AddMember(userId, SharePermissionType.Read);
+
+        // Assert
+        Assert.Equal(SharePermissionType.Write, member.PermissionType);
+        Assert.Equal(originalUpdatedAt, shoppingList.UpdatedAt);
+        Assert.Equal(originalVersion, shoppingList.Version);
     }
 }
