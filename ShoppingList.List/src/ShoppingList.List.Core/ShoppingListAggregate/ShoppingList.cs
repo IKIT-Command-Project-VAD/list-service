@@ -1,4 +1,5 @@
 using ShoppingList.List.Core.ShoppingListAggregate.Enums;
+using ShoppingList.List.Core.ShoppingListAggregate.Events;
 
 namespace ShoppingList.List.Core.ShoppingListAggregate;
 
@@ -40,6 +41,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
     {
         Name = Guard.Against.NullOrWhiteSpace(name);
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(Id, "list.name.updated", Version, UpdatedAt));
     }
 
     public void SoftDelete()
@@ -76,6 +78,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
 
         _items.Add(item);
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(Id, "list.item.created", Version, UpdatedAt));
         return item;
     }
 
@@ -88,6 +91,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
         var link = ShareLink.Create(Id, createdBy, permissionType, expiresAt);
         _shareLinks.Add(link);
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(Id, "list.sharelink.created", Version, UpdatedAt));
         return link;
     }
 
@@ -99,6 +103,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
             if (existing.UpgradePermission(permissionType))
             {
                 Touch();
+                RegisterDomainEvent(new ListChangedEvent(Id, "list.member.permission.upgraded", Version, UpdatedAt));
             }
 
             return existing;
@@ -107,6 +112,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
         var member = ListMember.Create(Id, userId, permissionType);
         _members.Add(member);
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(Id, "list.member.joined", Version, UpdatedAt));
         return member;
     }
 

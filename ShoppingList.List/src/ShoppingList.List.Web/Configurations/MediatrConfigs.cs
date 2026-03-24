@@ -13,6 +13,7 @@ public static class MediatrConfigs
         {
             Assembly.GetAssembly(typeof(Contributor)), // Core
             Assembly.GetAssembly(typeof(CreateContributorCommand)), // UseCases
+            Assembly.GetExecutingAssembly(), // Web
         };
 
         services

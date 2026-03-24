@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +17,7 @@ public static class ServiceConfigs
     )
     {
         services.AddHealthChecks();
+        services.AddSignalR();
 
         services.AddInfrastructureServices(builder.Configuration, logger).AddMediatrConfigs();
 
@@ -62,6 +63,21 @@ public static class ServiceConfigs
             {
                 options.Authority = authority;
                 options.RequireHttpsMetadata = requireHttps;
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrWhiteSpace(accessToken) && path.StartsWithSegments("/hubs/lists"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                };
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

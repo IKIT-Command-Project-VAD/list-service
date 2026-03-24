@@ -1,4 +1,6 @@
-﻿namespace ShoppingList.List.Core.ShoppingListAggregate;
+using ShoppingList.List.Core.ShoppingListAggregate.Events;
+
+namespace ShoppingList.List.Core.ShoppingListAggregate;
 
 public sealed class ListItem : EntityBase<Guid>, IAggregateRoot
 {
@@ -76,12 +78,14 @@ public sealed class ListItem : EntityBase<Guid>, IAggregateRoot
         Currency = currency;
         IsChecked = isChecked;
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(ListId, "list.item.updated"));
     }
 
     public void ToggleChecked(bool? isChecked = null)
     {
         IsChecked = isChecked ?? !IsChecked;
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(ListId, "list.item.checked.toggled"));
     }
 
     public void SoftDelete()
@@ -91,6 +95,7 @@ public sealed class ListItem : EntityBase<Guid>, IAggregateRoot
 
         IsDeleted = true;
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(ListId, "list.item.deleted"));
     }
 
     private void Touch()

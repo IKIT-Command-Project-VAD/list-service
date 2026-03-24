@@ -1,6 +1,7 @@
-﻿using ShoppingList.List.UseCases.Contributors.Create;
+using ShoppingList.List.UseCases.Contributors.Create;
 using ShoppingList.List.Web.Configurations;
 using ShoppingList.List.Infrastructure.Data;
+using ShoppingList.List.Web.Realtime;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,6 +60,7 @@ app.UseAuthorization();
 await app.UseAppMiddlewareAndSeedDatabase();
 
 app.MapHealthChecks("/healthz");
+app.MapHub<ListsHub>("/hubs/lists");
 
 await app.RunAsync();
 
