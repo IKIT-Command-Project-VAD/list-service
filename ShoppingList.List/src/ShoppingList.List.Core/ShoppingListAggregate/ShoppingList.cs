@@ -51,6 +51,7 @@ public sealed class ShoppingList : EntityBase<Guid>, IAggregateRoot
 
         IsDeleted = true;
         Touch();
+        RegisterDomainEvent(new ListChangedEvent(Id, "list.deleted", Version, UpdatedAt));
     }
 
     public ListItem AddItem(
